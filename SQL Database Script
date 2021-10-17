@@ -1,0 +1,23 @@
+
+Use Quoridor
+GO
+
+Create Table Users (
+ID int identity primary key,
+Email nvarchar(100) not null,
+UserName nvarchar(100) not null,
+FirstName nvarchar(100) not null,
+LastName nvarChar(100) not null,
+Pass nvarChar(100) not null,
+CONSTRAINT UC_Email UNIQUE(Email)
+)
+
+GO
+
+Insert Into Users Values
+('admin@gmail.com', 'admin', 'adminFN', 'adminLN', '123');
+Insert Into Users Values
+('u1@gmail.com', 'u1', 'u1', 'u1', 'u1');
+
+GO
+
