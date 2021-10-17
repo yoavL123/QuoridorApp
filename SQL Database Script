@@ -20,4 +20,3 @@ Insert Into Users Values
 ('u1@gmail.com', 'u1', 'u1', 'u1', 'u1');
 
 GO
-
