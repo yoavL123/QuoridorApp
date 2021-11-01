@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:local="clr-namespace:QuoridorApp.ViewModels"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuoridorApp.Views.SignUp">
+    <!-- Binding to "SignUpViewModel" -->
+        <ContentPage.BindingContext>
+        <local:SignUpViewModel></local:SignUpViewModel>
+    </ContentPage.BindingContext>
+    <!-- Style resources -->
+    <ContentPage.Resources>
+        <Style x:Key="SignUpStack" TargetType="StackLayout">
+            <Setter Property="Orientation" Value="Vertical"/>
+            <Setter Property="Padding" Value="30"/>
+            <Setter Property="Spacing" Value="40"/>
+        </Style>
+        <Style x:Key="SignUpButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Coral"/>
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="FontSize" Value="Medium" />
+
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout Style="{StaticResource SignUpStack}">
+            <Label Text="Sign Up"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <!--
+            public int PlayerId { get; set; }
+        public string Email { get; set; }
+        public string UserName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string PlayerPass { get; set; }
+            
+            -->
+            <Frame >
+                <StackLayout>
+                    <Entry x:Name="Email" Text="{Binding Email}" Placeholder="Enter email..." />
+                    <Entry x:Name="UserName" Text="{Binding UserName}" Placeholder="Enter username..." />
+                    <Entry x:Name="FirstName" Text="{Binding FirstName}" Placeholder="Enter first name..." />
+                    <Entry x:Name="LastName" Text="{Binding LastName}" Placeholder="Enter last name..." />
+                    <Entry x:Name="PlayerPass" Text="{Binding PlayerPass}" Placeholder="Enter a password" />
+                </StackLayout>
+            </Frame>
+            <Button Command="{Binding SignUpCommand}" Text="Sign Up!" Style="{StaticResource SignUpButton}" />
+        </StackLayout>
+        
+        
+    </ContentPage.Content>
+</ContentPage>

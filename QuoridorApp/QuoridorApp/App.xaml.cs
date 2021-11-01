@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuoridorApp.Views;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,11 +11,14 @@ namespace QuoridorApp
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            //MainPage = new MainPage();
+            // Setting starting page as sign up page:
+            MainPage = new SignUp();
         }
 
         protected override void OnStart()
         {
+
         }
 
         protected override void OnSleep()
