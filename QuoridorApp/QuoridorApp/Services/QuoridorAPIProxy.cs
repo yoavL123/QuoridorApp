@@ -105,7 +105,7 @@ namespace QuoridorApp.Services
                     $"&userName={userName}&firstName={firstName}&lsatName={lastName}&playerPass={playerPass}");
                 if (response.IsSuccessStatusCode)
                 {
-                    JsonSerializerOptions options = new JsonSerializerOptions
+                    JsonSerializerOptions options = new JsonSerializerOptions 
                     {
                         ReferenceHandler = ReferenceHandler.Preserve, //avoid reference loops!
                         PropertyNameCaseInsensitive = true
