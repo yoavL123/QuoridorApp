@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using QuoridorApp.ViewModels;
 
 namespace QuoridorApp.Views
 {
@@ -14,6 +15,9 @@ namespace QuoridorApp.Views
     {
         public StartPage()
         {
+
+            StartPageViewModel vm = new StartPageViewModel();
+            BindingContext = vm;
             InitializeComponent();
         }
 

@@ -23,19 +23,11 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Style="{StaticResource SignUpStack}">
+            <Button Text="Back to main page" Command="{Binding ToStartPageCommand}" />
             <Label Text="Sign Up"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
-            <!--
-            public int PlayerId { get; set; }
-        public string Email { get; set; }
-        public string UserName { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string PlayerPass { get; set; }
-            
-            -->
-            <Frame >
+            <Frame>
                 <StackLayout>
                     <Entry x:Name="Email" Text="{Binding Email}" Placeholder="Enter email..." />
                     <Entry x:Name="UserName" Text="{Binding UserName}" Placeholder="Enter username..." />

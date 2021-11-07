@@ -7,6 +7,15 @@ namespace QuoridorApp
 {
     public partial class App : Application
     {
+
+        public static bool IsDevEnv
+        {
+            get
+            {
+                return true; //change this before release!
+            }
+        }
+
         public App()
         {
             InitializeComponent();
@@ -14,7 +23,7 @@ namespace QuoridorApp
             //MainPage = new MainPage();
             // Setting starting page as sign up page:
             //MainPage = new SignUp();
-            MainPage = new StartPage();
+            MainPage = new NavigationPage(new StartPage());
         }
 
         protected override void OnStart()

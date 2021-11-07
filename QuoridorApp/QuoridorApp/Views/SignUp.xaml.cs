@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using QuoridorApp.ViewModels;
 
 namespace QuoridorApp.Views
 {
@@ -14,6 +15,8 @@ namespace QuoridorApp.Views
     {
         public SignUp()
         {
+            SignUpViewModel vm = new SignUpViewModel();
+            BindingContext = vm;
             InitializeComponent();
         }
     }

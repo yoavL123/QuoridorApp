@@ -4,6 +4,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
+using QuoridorApp.Views;
 
 namespace QuoridorApp.ViewModels
 {
@@ -87,19 +88,24 @@ namespace QuoridorApp.ViewModels
             }
         }
         #endregion
-        public ICommand SignUpCommand { get; protected set; }
+        public ICommand SubmitSignUpCommand => new Command(OnSubmitSignUpCommand);
 
         public SignUpViewModel()
         {
-            SignUpCommand = new Command(OnSubmit);
         }
 
+        public ICommand ToStartPageCommand => new Command(OnToStartPageCommand);
 
+        public async void OnToStartPageCommand()
+        {
+            Page p = new Views.StartPage();
+            await App.Current.MainPage.Navigation.PushAsync(p);
+        }
         /*
         TODO
         Currently not really signing up
         */
-        public async void OnSubmit()
+        public async void OnSubmitSignUpCommand()
         {
             
         }
