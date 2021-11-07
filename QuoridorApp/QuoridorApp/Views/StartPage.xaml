@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuoridorApp.Views.StartPage">
+    <ContentPage.Resources>
+        <Style x:Key="TitleLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="Large"/>
+            <Setter Property="TextColor" Value="Chocolate"/>
+            <Setter Property="BackgroundColor" Value="Firebrick"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <!--<Setter Property="HorizontalOptions" Value="Center"/> -->
+
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        
+        <StackLayout>
+            <Label Text="Quoridor" Style="{StaticResource TitleLabel}" />
+            <!--<Label Text="Quoridor"  Style="{StaticResource StandardLabelStyle}"/> -->
+            <Button Text="Sign In" />
+            <Button Text="Sign Up" Command="{Binding ToSignUp}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

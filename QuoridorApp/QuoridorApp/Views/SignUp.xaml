@@ -41,7 +41,7 @@
                     <Entry x:Name="UserName" Text="{Binding UserName}" Placeholder="Enter username..." />
                     <Entry x:Name="FirstName" Text="{Binding FirstName}" Placeholder="Enter first name..." />
                     <Entry x:Name="LastName" Text="{Binding LastName}" Placeholder="Enter last name..." />
-                    <Entry x:Name="PlayerPass" Text="{Binding PlayerPass}" Placeholder="Enter a password" />
+                    <Entry x:Name="PlayerPass" Text="{Binding PlayerPass}" Placeholder="Enter password..." />
                 </StackLayout>
             </Frame>
             <Button Command="{Binding SignUpCommand}" Text="Sign Up!" Style="{StaticResource SignUpButton}" />

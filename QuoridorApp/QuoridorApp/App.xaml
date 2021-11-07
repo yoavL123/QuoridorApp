@@ -12,6 +12,13 @@
                 <Setter Property="TextColor" Value="Brown">
                 </Setter>
             </Style>
+            <Style x:Key="PageStyle" TargetType="Page">
+                <Setter Property="BackgroundColor" Value="Black"/>
+            </Style>
+            <Style x:Key="StandardLabelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="AliceBlue"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
             
         </ResourceDictionary>
 

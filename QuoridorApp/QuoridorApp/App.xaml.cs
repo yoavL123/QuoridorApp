@@ -13,7 +13,8 @@ namespace QuoridorApp
 
             //MainPage = new MainPage();
             // Setting starting page as sign up page:
-            MainPage = new SignUp();
+            //MainPage = new SignUp();
+            MainPage = new StartPage();
         }
 
         protected override void OnStart()
