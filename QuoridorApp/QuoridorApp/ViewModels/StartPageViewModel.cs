@@ -19,15 +19,8 @@ using System.Linq;
 
 namespace QuoridorApp.ViewModels
 {
-    class StartPageViewModel : INotifyPropertyChanged
+    class StartPageViewModel : ViewModelBase
     {
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChnaged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
         public StartPageViewModel()
         {
 
@@ -38,10 +31,8 @@ namespace QuoridorApp.ViewModels
         
         public async void OnToSignUpCommand()
         {
-            App theApp = (App)App.Current;
-            StartPageViewModel vm = new StartPageViewModel();
             Page p = new Views.SignUp();
-            await theApp.MainPage.Navigation.PushAsync(p);
+            await App.Current.MainPage.Navigation.PushAsync(p);
             
         }
         #endregion

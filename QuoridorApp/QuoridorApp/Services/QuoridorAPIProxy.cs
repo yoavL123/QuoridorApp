@@ -95,14 +95,15 @@ namespace QuoridorApp.Services
         /*
         Sign Up
         */
-
+        /*
         public async Task<Player> SignUpAsync(string email, string userName, string firstName, string lastName, string playerPass)
         {
-            /*
+            
             try
             {
-                HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/signUp?Email={email}" +
-                    $"&userName={userName}&firstName={firstName}&lsatName={lastName}&playerPass={playerPass}");
+                //HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/signUp?Email={email}" +
+                //$"&userName={userName}&firstName={firstName}&lsatName={lastName}&playerPass={playerPass}");
+                /*
                 if (response.IsSuccessStatusCode)
                 {
                     JsonSerializerOptions options = new JsonSerializerOptions 
@@ -111,22 +112,26 @@ namespace QuoridorApp.Services
                         PropertyNameCaseInsensitive = true
                     };
                     string content = await response.Content.ReadAsStringAsync();
-                    User u = JsonSerializer.Deserialize<User>(content, options);
+                    Player u = JsonSerializer.Deserialize<User>(content, options);
                     return u;
                 }
                 else
                 {
                     return null;
                 }
+                
+                //HttpResponseMessage response = await this.client.PostAsync($"{this.baseUri}/signUp?Email={email}" +
+                    //$"&userName={userName}&firstName={firstName}&lsatName={lastName}&playerPass={playerPass}");
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return null;
             }
-            */
+            
         }
-        
+        */
 
     }
 }

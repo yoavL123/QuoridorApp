@@ -8,15 +8,8 @@ using QuoridorApp.Views;
 
 namespace QuoridorApp.ViewModels
 {
-    class SignUpViewModel : INotifyPropertyChanged
+    class SignUpViewModel : ViewModelBase
     {
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChnaged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
 
         /*
         public int PlayerId { get; set; }
