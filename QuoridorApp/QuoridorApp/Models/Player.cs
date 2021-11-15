@@ -14,6 +14,21 @@ namespace QuoridorApp.Models
             RatingChanges = new HashSet<RatingChange>();
         }
 
+        public Player(string email, string userName, string firstName, string lastName, string playerPass)
+        {
+            Email = email;
+            UserName = userName;
+            FirstName = firstName;
+            LastName = lastName;
+            PlayerPass = playerPass;
+
+
+            GameMoves = new HashSet<GameMove>();
+            GamePlayer1s = new HashSet<Game>();
+            GamePlayer2s = new HashSet<Game>();
+            RatingChanges = new HashSet<RatingChange>();
+        }
+
         public int PlayerId { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }

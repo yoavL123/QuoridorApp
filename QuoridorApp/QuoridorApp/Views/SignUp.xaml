@@ -36,7 +36,7 @@
                     <Entry x:Name="PlayerPass" Text="{Binding PlayerPass}" Placeholder="Enter password..." />
                 </StackLayout>
             </Frame>
-            <Button Command="{Binding SignUpCommand}" Text="Sign Up!" Style="{StaticResource SignUpButton}" />
+            <Button Command="{Binding SubmitSignUpCommand}" Text="Sign Up!" Style="{StaticResource SignUpButton}" />
         </StackLayout>
         
         

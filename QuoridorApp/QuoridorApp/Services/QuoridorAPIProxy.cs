@@ -103,7 +103,7 @@ namespace QuoridorApp.Services
             {
                 //HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/signUp?Email={email}" +
                 //$"&userName={userName}&firstName={firstName}&lsatName={lastName}&playerPass={playerPass}");
-                /*
+                
                 if (response.IsSuccessStatusCode)
                 {
                     JsonSerializerOptions options = new JsonSerializerOptions 
@@ -112,7 +112,7 @@ namespace QuoridorApp.Services
                         PropertyNameCaseInsensitive = true
                     };
                     string content = await response.Content.ReadAsStringAsync();
-                    Player u = JsonSerializer.Deserialize<User>(content, options);
+                    Player u = JsonSerializer.Deserialize<Player>(content, options);
                     return u;
                 }
                 else
@@ -132,6 +132,39 @@ namespace QuoridorApp.Services
             
         }
         */
+
+        public async Task<Player> SignUpPlayer(Player player)
+        {
+            try
+            {
+                JsonSerializerOptions options = new JsonSerializerOptions
+                {
+                    //ReferenceHandler = ReferenceHandler.Preserve,
+                    //Encoder = JavaScriptEncoder.Create(UnicodeRanges.Hebrew, UnicodeRanges.BasicLatin),
+                    PropertyNameCaseInsensitive = true
+                };
+                string jsonObject = JsonSerializer.Serialize<Player>(player, options);
+                StringContent content = new StringContent(jsonObject, Encoding.UTF8, "Quoridor/json");
+
+                HttpResponseMessage response = await this.client.PostAsync($"{this.baseUri}/SignUpPlayer", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonContent = await response.Content.ReadAsStringAsync();
+                    Player ret = JsonSerializer.Deserialize<Player>(jsonContent, options);
+                    return ret;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
 
     }
 }

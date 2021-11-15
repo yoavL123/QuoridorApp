@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 using QuoridorApp.Views;
+using QuoridorApp.Services;
+using QuoridorApp.Models;
 
 namespace QuoridorApp.ViewModels
 {
@@ -97,10 +99,22 @@ namespace QuoridorApp.ViewModels
         /*
         TODO
         Currently not really signing up
+        TODO: add exceptions
         */
         public async void OnSubmitSignUpCommand()
         {
-            
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            Player player = new Player
+            {
+                Email = Email,
+                UserName = UserName,
+                FirstName = FirstName,
+                LastName = LastName,
+                PlayerPass = PlayerPass
+            };
+            Player p = await proxy.SignUpPlayer(player);
+            Page page = new Views.StartPage();
+            await App.Current.MainPage.Navigation.PushAsync(page);
         }
     }
 }
