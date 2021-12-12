@@ -15,6 +15,7 @@ using QuoridorApp.ViewModels;
 using QuoridorApp.Views;
 
 
+
 namespace QuoridorApp.Services
 {
     class QuoridorAPIProxy
@@ -22,12 +23,12 @@ namespace QuoridorApp.Services
 
         private const string CLOUD_URL = "TBD"; //API url when going on the cloud
         private const string CLOUD_PHOTOS_URL = "TBD";
-        private const string DEV_ANDROID_EMULATOR_URL = "http://10.0.2.2:21604/contactsAPI"; //API url when using emulator on android
-        private const string DEV_ANDROID_PHYSICAL_URL = "http://192.168.1.14:21604/contactsAPI"; //API url when using physucal device on android
-        private const string DEV_WINDOWS_URL = "https://localhost:44331/contactsAPI"; //API url when using windoes on development
-        private const string DEV_ANDROID_EMULATOR_PHOTOS_URL = "http://10.0.2.2:21604/Images/"; //API url when using emulator on android
-        private const string DEV_ANDROID_PHYSICAL_PHOTOS_URL = "http://192.168.1.14:21604/Images/"; //API url when using physucal device on android
-        private const string DEV_WINDOWS_PHOTOS_URL = "https://localhost:44331/Images/"; //API url when using windoes on development
+        private const string DEV_ANDROID_EMULATOR_URL = "http://10.0.2.2:20034/QuoridorAPI"; //API url when using emulator on android
+        private const string DEV_ANDROID_PHYSICAL_URL = "http://192.168.1.14:20034/QuoridorAPI"; //API url when using physucal device on android
+        private const string DEV_WINDOWS_URL = "http://localhost:20034/QuoridorAPI"; //API url when using windoes on development
+        private const string DEV_ANDROID_EMULATOR_PHOTOS_URL = "http://10.0.2.2:20034/Images/"; //API url when using emulator on android
+        private const string DEV_ANDROID_PHYSICAL_PHOTOS_URL = "http://192.168.1.14:20034/Images/"; //API url when using physucal device on android
+        private const string DEV_WINDOWS_PHOTOS_URL = "https://localhost:20034/Images/"; //API url when using windoes on development
 
 
         private HttpClient client;
@@ -144,8 +145,9 @@ namespace QuoridorApp.Services
                     PropertyNameCaseInsensitive = true
                 };
                 string jsonObject = JsonSerializer.Serialize<Player>(player, options);
-                StringContent content = new StringContent(jsonObject, Encoding.UTF8, "Quoridor/json");
+                StringContent content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
 
+                //HttpResponseMessage response = await this.client.PostAsync($"{this.baseUri}/SignUpPlayer", content);
                 HttpResponseMessage response = await this.client.PostAsync($"{this.baseUri}/SignUpPlayer", content);
                 if (response.IsSuccessStatusCode)
                 {
