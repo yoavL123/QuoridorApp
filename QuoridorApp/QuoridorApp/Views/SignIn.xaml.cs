@@ -11,16 +11,13 @@ using QuoridorApp.ViewModels;
 namespace QuoridorApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class StartPage : ContentPage
+    public partial class SignIn : ContentPage
     {
-        public StartPage()
+        public SignIn()
         {
-            StartPageViewModel vm = new StartPageViewModel();
+            SignInViewModel vm = new SignInViewModel();
             BindingContext = vm;
             InitializeComponent();
         }
-
-
-        
     }
 }

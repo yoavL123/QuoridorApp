@@ -37,6 +37,18 @@ namespace QuoridorApp.ViewModels
         }
         #endregion
 
+
+        #region Go To Sign In
+
+        public ICommand ToSignInCommand => new Command(OnToSignInCommand);
+
+        public async void OnToSignInCommand()
+        {
+            Page p = new Views.SignIn();
+            await App.Current.MainPage.Navigation.PushAsync(p);
+        }
         
+        #endregion
+
     }
 }
