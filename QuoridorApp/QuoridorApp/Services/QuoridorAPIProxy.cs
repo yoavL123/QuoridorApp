@@ -168,5 +168,34 @@ namespace QuoridorApp.Services
         }
 
 
+
+        public async Task<Player> SignInAsync(string userName, string pass)
+        {
+            try
+            {
+                HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/SignInPlayer?userName={userName}&pass={pass}");
+                if (response.IsSuccessStatusCode)
+                {
+                    JsonSerializerOptions options = new JsonSerializerOptions
+                    {
+                        ReferenceHandler = ReferenceHandler.Preserve, //avoid reference loops!
+                        PropertyNameCaseInsensitive = true
+                    };
+                    string content = await response.Content.ReadAsStringAsync();
+                    Player p = JsonSerializer.Deserialize<Player>(content, options);
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
     }
 }

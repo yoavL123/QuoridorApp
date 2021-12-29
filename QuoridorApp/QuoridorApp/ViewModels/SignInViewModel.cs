@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using QuoridorApp.Services;
+using QuoridorApp.Models;
 
 namespace QuoridorApp.ViewModels
 {
@@ -53,6 +55,8 @@ namespace QuoridorApp.ViewModels
 
         public async void OnSubmitSignInCommand()
         {
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            Player player = await proxy.SignInAsync(userName, playerPass);
             Page p = new Views.StartPage();
             await App.Current.MainPage.Navigation.PushAsync(p);
         }
