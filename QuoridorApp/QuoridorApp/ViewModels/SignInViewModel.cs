@@ -19,7 +19,7 @@ namespace QuoridorApp.ViewModels
             set
             {
                 userName = value;
-                OnPropertyChnaged("UserName");
+                OnPropertyChanged("UserName");
             }
         }
         #endregion
@@ -32,7 +32,7 @@ namespace QuoridorApp.ViewModels
             set
             {
                 playerPass = value;
-                OnPropertyChnaged("PlayerPass");
+                OnPropertyChanged("PlayerPass");
             }
         }
         #endregion
@@ -41,7 +41,7 @@ namespace QuoridorApp.ViewModels
         public SignInViewModel()
         {
         }
-
+        #region To StartPage
         public ICommand ToStartPageCommand => new Command(OnToStartPageCommand);
 
         public async void OnToStartPageCommand()
@@ -49,7 +49,9 @@ namespace QuoridorApp.ViewModels
             Page p = new Views.StartPage();
             await App.Current.MainPage.Navigation.PushAsync(p);
         }
-
+        #endregion
+        
+        #region Submit SignIn
         public ICommand SubmitSignInCommand => new Command(OnSubmitSignInCommand);
 
 
@@ -57,8 +59,15 @@ namespace QuoridorApp.ViewModels
         {
             QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
             Player player = await proxy.SignInAsync(userName, playerPass);
-            Page p = new Views.StartPage();
-            await App.Current.MainPage.Navigation.PushAsync(p);
+            if(player == null)
+            {
+                return;
+            }
+            CurrentApp.CurrentPlayer = player;
+            Page p = new Views.MainMenu();
+            
+            await CurrentApp.MainPage.Navigation.PushAsync(p);
         }
+        #endregion
     }
 }

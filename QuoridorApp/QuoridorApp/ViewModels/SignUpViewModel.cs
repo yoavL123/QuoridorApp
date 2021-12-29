@@ -30,7 +30,7 @@ namespace QuoridorApp.ViewModels
             set
             {
                 email = value;
-                OnPropertyChnaged("Email");
+                OnPropertyChanged("Email");
             }
         }
         
@@ -43,7 +43,7 @@ namespace QuoridorApp.ViewModels
             set
             {
                 userName = value;
-                OnPropertyChnaged("UserName");
+                OnPropertyChanged("UserName");
             }
         }
         #endregion
@@ -55,7 +55,7 @@ namespace QuoridorApp.ViewModels
             set
             {
                 firstName = value;
-                OnPropertyChnaged("FirstName");
+                OnPropertyChanged("FirstName");
             }
         }
         #endregion
@@ -67,7 +67,7 @@ namespace QuoridorApp.ViewModels
             set
             {
                 lastName = value;
-                OnPropertyChnaged("LastName");
+                OnPropertyChanged("LastName");
             }
         }
         #endregion
@@ -79,7 +79,7 @@ namespace QuoridorApp.ViewModels
             set
             {
                 playerPass = value;
-                OnPropertyChnaged("PlayerPass");
+                OnPropertyChanged("PlayerPass");
             }
         }
         #endregion

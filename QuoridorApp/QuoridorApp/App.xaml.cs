@@ -1,4 +1,5 @@
-﻿using QuoridorApp.Views;
+﻿using QuoridorApp.Models;
+using QuoridorApp.Views;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -25,6 +26,9 @@ namespace QuoridorApp
             //MainPage = new SignUp();
             MainPage = new NavigationPage(new StartPage());
         }
+
+        // The current logged in user
+        public Player CurrentPlayer { get; set; }
 
         protected override void OnStart()
         {

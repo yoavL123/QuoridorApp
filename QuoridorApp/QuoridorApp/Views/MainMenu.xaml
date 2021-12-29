@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:local="clr-namespace:QuoridorApp.ViewModels"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuoridorApp.Views.MainMenu">
+    <!-- Binding to "MainMenuViewModel" -->
+    <ContentPage.BindingContext>
+        <local:MainMenuViewModel></local:MainMenuViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Main Menu"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+
+            <Label Text="{Binding UserName, StringFormat='Welcome {0}!'}"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <Button Text="Log out!" Command="{Binding SubmitSignOutCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
