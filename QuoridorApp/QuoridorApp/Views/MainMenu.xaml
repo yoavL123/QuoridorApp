@@ -17,6 +17,8 @@
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
             <Button Text="Log out!" Command="{Binding SubmitSignOutCommand}" />
+
+            <Button Text="Go To Board!" Command="{Binding ToBoardCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

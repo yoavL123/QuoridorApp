@@ -14,7 +14,7 @@ namespace QuoridorApp.ViewModels
 {
     class MainMenuViewModel : ViewModelBase
     {
-        #region Submit SignIn
+        #region Submit SignOut
         public ICommand SubmitSignOutCommand => new Command(OnSubmitSignOutCommand);
 
 
@@ -23,6 +23,17 @@ namespace QuoridorApp.ViewModels
             QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
             CurrentApp.CurrentPlayer = null;
             _ = CurrentApp.MainPage.Navigation.PushAsync(new StartPage());
+        }
+        #endregion
+
+        #region Go To Board
+        public ICommand ToBoardCommand => new Command(OnToBoardCommand);
+
+        public async void OnToBoardCommand()
+        {
+            Page p = new Views.Board();
+            await App.Current.MainPage.Navigation.PushAsync(p);
+
         }
         #endregion
     }

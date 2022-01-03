@@ -47,6 +47,7 @@ namespace QuoridorApp.ViewModels
         public async void OnToStartPageCommand()
         {
             Page p = new Views.StartPage();
+            //Page p = new Views.Board();
             await App.Current.MainPage.Navigation.PushAsync(p);
         }
         #endregion
