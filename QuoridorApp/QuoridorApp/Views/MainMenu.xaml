@@ -16,9 +16,10 @@
             <Label Text="{Binding UserName, StringFormat='Welcome {0}!'}"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
+            <Button Text="Go To Board!" Command="{Binding ToBoardCommand}" />
             <Button Text="Log out!" Command="{Binding SubmitSignOutCommand}" />
 
-            <Button Text="Go To Board!" Command="{Binding ToBoardCommand}" />
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
