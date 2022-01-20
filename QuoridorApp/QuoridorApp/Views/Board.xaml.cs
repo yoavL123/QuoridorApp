@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+
 
 namespace QuoridorApp.Views
 {
@@ -20,13 +21,13 @@ namespace QuoridorApp.Views
         SECOND VAR IS HIGH/LOW
         */
         const int SIZE = 9;
-        const double PAWN_TILE_SIZE = 40;
-        const double BLOCK_TILE_SMALL = 10;
-        const double BLOCK_TILE_BIG = 40;
+        const double PAWN_TILE_SIZE = 60;
+        const double BLOCK_TILE_SMALL = 15;
+        const double BLOCK_TILE_BIG = 60;
         Button[,] pawnBoard;
         Button[,] horBlockBoard; // horizontal block board
         Button[,] verBlockBoard; // vertical block board
-
+        BoardViewModel vm;
         void InitBoard()
         {
             pawnBoard = new Button[SIZE, SIZE];
@@ -40,11 +41,8 @@ namespace QuoridorApp.Views
                     // Create a pawn tile:
                     pawnBoard[i, j] = new Button // Create the button add its properties:
                     {
-                        BackgroundColor = Color.Black,
-                        //ScaleX = 10,
-                        //ScaleY = 10
-                        //HeightRequest = 20,
-                        //WidthRequest = 20,
+                        //BackgroundColor = Color.Black,
+                        BackgroundColor = BoardViewModel.pawnTileCol[vm.pawnBoard[i, j]]
                     };
                     double startX = i * PAWN_TILE_SIZE + i * BLOCK_TILE_SMALL;
                     double startY = j * PAWN_TILE_SIZE + j * BLOCK_TILE_SMALL;
@@ -58,68 +56,55 @@ namespace QuoridorApp.Views
                         // Create a block tile:
                         horBlockBoard[i, j] = new Button
                         {
-                            //BackgroundColor = Color.DarkViolet,
-                            BackgroundColor = Color.DarkRed,
-                            //ScaleX = 10,
-                            //ScaleY = 10
-                            //HeightRequest = 10,
-                            //WidthRequest = 10,
+                            //BackgroundColor = Color.DarkRed,
+                            BackgroundColor = BoardViewModel.blockTileCol[vm.horBlockBoard[i, j]]
                         };
-
-
-                        //startR += PAWN_TILE_R;
                         startY += PAWN_TILE_SIZE;
                         Rectangle blockBounds = new Rectangle(startX, startY, BLOCK_TILE_BIG, BLOCK_TILE_SMALL);
                         theBoard.Children.Add(horBlockBoard[i, j]); // "theBoard" is defined in the view. Handled via binding
                         AbsoluteLayout.SetLayoutBounds(horBlockBoard[i, j], blockBounds); // Add the button to the absolute layout in the view
-                                                                                          //Console.WriteLine($"StartC: {startC}");
                         startY -= PAWN_TILE_SIZE;
                     }
 
                     if (i < SIZE - 1) // Horizontal block cell is only between pawn cells
                     {
-                        // Create a block tile:
                         verBlockBoard[i, j] = new Button
                         {
-                            //BackgroundColor = Color.DarkViolet,
-                            BackgroundColor = Color.DarkRed,
-                            //ScaleX = 10,
-                            //ScaleY = 10
-                            //HeightRequest = 10,
-                            //WidthRequest = 10,
+                            //BackgroundColor = Color.DarkRed,
+                            //BackgroundColor = 
+                            BackgroundColor = BoardViewModel.blockTileCol[vm.verBlockBoard[i, j]]
                         };
-
-
-                        //startR += PAWN_TILE_R;
                         startX += PAWN_TILE_SIZE;
                         Rectangle blockBounds = new Rectangle(startX, startY, BLOCK_TILE_SMALL, BLOCK_TILE_BIG);
                         theBoard.Children.Add(verBlockBoard[i, j]); // "theBoard" is defined in the view. Handled via binding
                         AbsoluteLayout.SetLayoutBounds(verBlockBoard[i, j], blockBounds); // Add the button to the absolute layout in the view
-                                                                                          //Console.WriteLine($"StartC: {startC}");
                         startX += PAWN_TILE_SIZE;
                     }
-
-
-
-
-
-
                 }
             }
         }
         public Board()
         {
-            this.BindingContext = new BoardViewModel();
+            vm = new BoardViewModel();
+            BindingContext = vm;
             InitializeComponent();
+
             InitBoard();
-            //AbsoluteLayout.SetLayoutBounds(theBoard, new Rectangle(100, 100, 100, 100));
+            
         }
 
+
+
         /*
-        public void OnBoardPawnChanged(int i, int j)
+        #region Move Pawn
+        public ICommand MovePawnCommand => new Command(OnMovePawnCommand);
+
+
+        public async void OnMovePawnCommand(int player, int newX, int newY)
         {
-            theBoard.
+            
         }
+        #endregion
         */
     }
 }
