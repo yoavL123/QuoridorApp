@@ -120,12 +120,20 @@ namespace QuoridorApp.ViewModels
         }
 
 
-        bool check_won()
+        bool CheckWon()
         {
             return (playerLoc[0, 1] == SIZE - 1) || (playerLoc[1, 1] == 0);
         }
         
+        /*
+         * Check 
+         */
+        /*
+        bool CheckAdj()
+        {
 
+        }
+        */
         public bool Move(int newX, int newY, BoardViewModel myBoard)
         {
             int player = myBoard.curPlayer;
@@ -139,7 +147,7 @@ namespace QuoridorApp.ViewModels
             myBoard.playerLoc[player, 1] = newY;
             myBoard.pawnBoard[myBoard.playerLoc[player, 0], myBoard.playerLoc[player, 1]].PawnTileStatus = player+1;
 
-            if (check_won())
+            if (myBoard.CheckWon())
             {
                 Application.Current.MainPage.DisplayAlert("Game ended", $"Player {player + 1} won!", "Back to home");
                 OnToMainMenuCommand();

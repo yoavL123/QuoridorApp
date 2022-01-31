@@ -101,9 +101,6 @@ namespace QuoridorApp.Views
             BindingContext = vm;
             InitBoard();
         }
-
-
-
         /*
         #region Move Pawn
         public ICommand MovePawnCommand => new Command(OnMovePawnCommand);
