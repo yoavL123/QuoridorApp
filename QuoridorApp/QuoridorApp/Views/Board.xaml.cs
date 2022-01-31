@@ -38,7 +38,7 @@ namespace QuoridorApp.Views
         BoardViewModel vm;
         void InitBoard()
         {
-            vm.pawnBoard = new PawnTile[SIZE, SIZE];
+            //vm.pawnBoard = new PawnTile[SIZE, SIZE];
             horBlockBoard = new Button[SIZE, SIZE - 1];
             verBlockBoard = new Button[SIZE - 1, SIZE];
 
@@ -99,6 +99,7 @@ namespace QuoridorApp.Views
             InitializeComponent();
             vm = new BoardViewModel(theBoard);
             BindingContext = vm;
+            InitBoard();
         }
 
 
