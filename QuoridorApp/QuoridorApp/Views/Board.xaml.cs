@@ -1,4 +1,4 @@
-﻿using QuoridorApp.ControlView;
+﻿//using QuoridorApp.ControlView;
 using QuoridorApp.Models;
 using QuoridorApp.ViewModels;
 using System;
@@ -99,10 +99,6 @@ namespace QuoridorApp.Views
             InitializeComponent();
             vm = new BoardViewModel(theBoard);
             BindingContext = vm;
-            
-
-            InitBoard();
-            
         }
 
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace QuoridorApp.ViewModels
@@ -14,6 +15,15 @@ namespace QuoridorApp.ViewModels
     public class BoardViewModel : ViewModelBase
     {
         const int SIZE = 9;
+
+        //public ICommand ToMainMenuCommand => new Command(OnToMainMenuCommand);
+
+        public async void OnToMainMenuCommand()
+        {
+            Page p = new Views.MainMenu();
+            await App.Current.MainPage.Navigation.PushAsync(p);
+
+        }
         /*
         Board:
         0 - empty place
@@ -26,7 +36,7 @@ namespace QuoridorApp.ViewModels
         2 - second player
         */
         //public int[,] pawnBoard;
-        public PawnTile[,] pawnBoard;
+        public PawnTile[,] pawnBoard = new PawnTile[SIZE, SIZE];
         public int[,] horBlockBoard; // horizontal block board
         public int[,] verBlockBoard; // vertical block board
         //const int SIZE = 9;
@@ -39,22 +49,23 @@ namespace QuoridorApp.ViewModels
         // a 2D array that specifies the locations of the players
 
         private int[,] playerLoc;
-
+        private int curPlayer;
         public BoardViewModel() { }
         public BoardViewModel(AbsoluteLayout theBoard)
         {
-            pawnBoard = new PawnTile[SIZE, SIZE];
+            //pawnBoard = new PawnTile[SIZE, SIZE];
 
             for(int i = 0; i < SIZE; i++)
             {
                 for(int j = 0; j < SIZE; j++)
                 {
-                    
+                    int ri = i, rj = j;
                     pawnBoard[i, j] = new PawnTile(i, j) // Create the button add its properties:
                     {
                         //BackgroundColor = Color.Black,
                         //BackgroundColor = BoardViewModel.pawnTileColStatus[vm.pawnBoard[i, j]],
-                        Command = new Command(() => Move(0, i, j))
+                        //Command = new Command(() => Move(0, i, j, this))
+                        Command = new Command(() => Move(ri, rj, this))
                     };
                     double startX = i * PAWN_TILE_SIZE + i * BLOCK_TILE_SMALL;
                     double startY = j * PAWN_TILE_SIZE + j * BLOCK_TILE_SMALL;
@@ -67,6 +78,7 @@ namespace QuoridorApp.ViewModels
             }
             horBlockBoard = new int[SIZE, SIZE - 1];
             verBlockBoard = new int[SIZE - 1, SIZE];
+            /*
             for(int i = 0; i < SIZE; i++)
             {
                 for(int j = 0; j < SIZE; j++)
@@ -74,6 +86,7 @@ namespace QuoridorApp.ViewModels
                     pawnBoard[i, j] = new PawnTile(i, j);
                 }
             }
+            */
             for (int i = 0; i < SIZE; i++)
             {
                 for (int j = 0; j < SIZE-1; j++)
@@ -92,7 +105,8 @@ namespace QuoridorApp.ViewModels
             pawnBoard[SIZE / 2, 0].PawnTileStatus = PawnTile.DicPawnStatus["Player1"];
             pawnBoard[SIZE / 2, SIZE-1].PawnTileStatus = PawnTile.DicPawnStatus["Player2"];
             playerLoc = new int[,] { { SIZE / 2, 0 }, { SIZE / 2, SIZE - 1 } };
-
+            curPlayer = 0; // this is the current player's turn
+            /*
             for (int i = 0; i < SIZE-1; i++)
             {
                 for (int j = 0; j < SIZE-1; j++)
@@ -101,17 +115,39 @@ namespace QuoridorApp.ViewModels
 
                 }
             }
+            */
 
         }
 
 
-        public bool Move(int player, int newX, int newY)
+        bool check_won()
         {
+            return (playerLoc[0, 1] == SIZE - 1) || (playerLoc[1, 1] == 0);
+        }
+        
+
+        public bool Move(int newX, int newY, BoardViewModel myBoard)
+        {
+            int player = myBoard.curPlayer;
             if (Math.Abs(playerLoc[player, 0] - newX) + Math.Abs(playerLoc[player, 1] - newY) > 1) return false;
-            //pawnBoard[playerLoc[player, 0], playerLoc[player, 1]] = 0;
-            playerLoc[player, 0] = newX;
-            playerLoc[player, 1] = newY;
-            //pawnBoard[playerLoc[player, 0], playerLoc[player, 1]] = 1;
+            if (Math.Abs(playerLoc[player, 0] - newX) + Math.Abs(playerLoc[player, 1] - newY) == 0) return false;
+            if (myBoard.pawnBoard[newX, newY].PawnTileStatus != PawnTile.DicPawnStatus["Empty"]) return false;
+            Console.WriteLine(playerLoc[player, 0]);
+            Console.WriteLine(pawnBoard[playerLoc[player, 0], playerLoc[player, 1]].PawnTileStatus);
+            myBoard.pawnBoard[myBoard.playerLoc[player, 0], myBoard.playerLoc[player, 1]].PawnTileStatus = PawnTile.DicPawnStatus["Empty"];
+            myBoard.playerLoc[player, 0] = newX;
+            myBoard.playerLoc[player, 1] = newY;
+            myBoard.pawnBoard[myBoard.playerLoc[player, 0], myBoard.playerLoc[player, 1]].PawnTileStatus = player+1;
+
+            if (check_won())
+            {
+                Application.Current.MainPage.DisplayAlert("Game ended", $"Player {player + 1} won!", "Back to home");
+                OnToMainMenuCommand();
+            }
+            
+            myBoard.curPlayer++;
+            myBoard.curPlayer %= 2;
+            
             return true;
         }
     }
