@@ -7,7 +7,7 @@ namespace QuoridorApp.Models
 {
     public class BlockTile : Button
     {
-        public static Color[] blockTileColStatus = new Color[] { Color.DarkRed, Color.BurlyWood, Color.BurlyWood, Color.BlueViolet };
+        public static Color[] blockTileColStatus = new Color[] { Color.DarkRed, Color.BurlyWood, Color.BurlyWood, Color.DarkOliveGreen};
         public static Dictionary<string, int> DicBlockStatus = new Dictionary<string, int>()
         {
             {"Empty", 0 },
