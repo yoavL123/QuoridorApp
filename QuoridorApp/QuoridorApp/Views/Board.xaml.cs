@@ -33,13 +33,13 @@ namespace QuoridorApp.Views
         const double BLOCK_TILE_SMALL = 15;
         const double BLOCK_TILE_BIG = 60;
         //PawnTile[,] pawnBoard;
-        Button[,] horBlockBoard; // horizontal block board
+        //Button[,] horBlockBoard; // horizontal block board
         Button[,] verBlockBoard; // vertical block board
         BoardViewModel vm;
         void InitBoard()
         {
             //vm.pawnBoard = new PawnTile[SIZE, SIZE];
-            horBlockBoard = new Button[SIZE, SIZE - 1];
+            //horBlockBoard = new Button[SIZE, SIZE - 1];
             verBlockBoard = new Button[SIZE - 1, SIZE];
 
             for (int i = 0; i < SIZE; i++)
@@ -65,18 +65,20 @@ namespace QuoridorApp.Views
                     if (j < SIZE - 1) // Horizontal block cell is only between pawn cells
                     {
                         // Create a block tile:
+                        /*
                         horBlockBoard[i, j] = new Button
                         {
                             //BackgroundColor = Color.DarkRed,
                             BackgroundColor = BoardViewModel.blockTileColStatus[vm.horBlockBoard[i, j]]
                         };
+                        */
                         startY += PAWN_TILE_SIZE;
-                        Rectangle blockBounds = new Rectangle(startX, startY, BLOCK_TILE_BIG, BLOCK_TILE_SMALL);
-                        theBoard.Children.Add(horBlockBoard[i, j]); // "theBoard" is defined in the view. Handled via binding
-                        AbsoluteLayout.SetLayoutBounds(horBlockBoard[i, j], blockBounds); // Add the button to the absolute layout in the view
+                        //Rectangle blockBounds = new Rectangle(startX, startY, BLOCK_TILE_BIG, BLOCK_TILE_SMALL);
+                        //theBoard.Children.Add(horBlockBoard[i, j]); // "theBoard" is defined in the view. Handled via binding
+                        //AbsoluteLayout.SetLayoutBounds(horBlockBoard[i, j], blockBounds); // Add the button to the absolute layout in the view
                         startY -= PAWN_TILE_SIZE;
                     }
-
+                    /*
                     if (i < SIZE - 1) // Horizontal block cell is only between pawn cells
                     {
                         verBlockBoard[i, j] = new Button
@@ -91,6 +93,7 @@ namespace QuoridorApp.Views
                         AbsoluteLayout.SetLayoutBounds(verBlockBoard[i, j], blockBounds); // Add the button to the absolute layout in the view
                         startX += PAWN_TILE_SIZE;
                     }
+                    */
                 }
             }
         }
