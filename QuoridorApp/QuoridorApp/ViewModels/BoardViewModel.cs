@@ -37,6 +37,7 @@ namespace QuoridorApp.ViewModels
         public BlockTile[,] horBlockBoard; // horizontal block board
         public BlockTile[,] verBlockBoard; // horizontal block board
         public bool[,] centerBlocked; // checks weather the center is blocked. Used to check if we can put a block
+        public CenterTile[,] centerTile;
         
         public static Color[] blockTileColStatus = new Color[] { Color.DarkRed, Color.BurlyWood, Color.BurlyWood };
 
@@ -52,6 +53,7 @@ namespace QuoridorApp.ViewModels
             horBlockBoard = new BlockTile[SIZE, SIZE - 1];
             verBlockBoard = new BlockTile[SIZE - 1, SIZE];
             centerBlocked = new bool[SIZE, SIZE];
+            centerTile = new CenterTile[SIZE - 1, SIZE - 1];
             blocksLeft = new int[2] { BLOCKS_NUM, BLOCKS_NUM };
             for (int i = 0; i < SIZE; i++)
             {
@@ -97,8 +99,22 @@ namespace QuoridorApp.ViewModels
                         Rectangle blockBounds = new Rectangle(startX, startY, BLOCK_TILE_SMALL, BLOCK_TILE_BIG);
                         theBoard.Children.Add(verBlockBoard[i, j]); // "theBoard" is defined in the view. Handled via binding
                         AbsoluteLayout.SetLayoutBounds(verBlockBoard[i, j], blockBounds); // Add the button to the absolute layout in the view
-                        startX += PAWN_TILE_SIZE;
+                        startX -= PAWN_TILE_SIZE;
                     }
+                    if(i < SIZE - 1 && j < SIZE - 1)
+                    {
+                        centerTile[i, j] = new CenterTile(i, j)
+                        {
+                            
+                        };
+                        //startX += PAWN_TILE_SIZE;
+                        startX = (i+1) * PAWN_TILE_SIZE + i * BLOCK_TILE_SMALL;
+                        startY = (j+1) * PAWN_TILE_SIZE + j * BLOCK_TILE_SMALL;
+                        Rectangle centerBounds = new Rectangle(startX, startY, BLOCK_TILE_SMALL, BLOCK_TILE_SMALL);
+                        theBoard.Children.Add(centerTile[i, j]); // "theBoard" is defined in the view. Handled via binding
+                        AbsoluteLayout.SetLayoutBounds(centerTile[i, j], centerBounds); // Add the button to the absolute layout in the view                     
+                    }
+                    
 
                 }
             }
@@ -289,6 +305,7 @@ namespace QuoridorApp.ViewModels
                 return false;
             }
             myBoard.centerBlocked[Math.Min(X, nextX), Y] = true;
+            myBoard.centerTile[Math.Min(X, nextX), Y].fill();
             
             blockStatus = "Empty";
             myBoard.horBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
@@ -355,6 +372,7 @@ namespace QuoridorApp.ViewModels
                 return false;
             }
             myBoard.centerBlocked[X, Math.Min(Y, nextY)] = true;
+            myBoard.centerTile[X, Math.Min(Y, nextY)].fill();
             blockStatus = "Empty";
             myBoard.verBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
             myBoard.verBlockBoard[nextX, nextY].BlockTileStatus = curPlayer + 1;

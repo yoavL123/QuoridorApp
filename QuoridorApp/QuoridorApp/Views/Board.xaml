@@ -23,7 +23,7 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <!-- Here, background color sets only the color of the board, so it sets those spaces which is very nice -->
-        <AbsoluteLayout BackgroundColor="BurlyWood" x:Name="theBoard" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <AbsoluteLayout BackgroundColor="DarkRed" x:Name="theBoard" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
               
         </AbsoluteLayout>
     </ContentPage.Content>
