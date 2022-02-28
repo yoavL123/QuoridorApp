@@ -36,5 +36,16 @@ namespace QuoridorApp.ViewModels
 
         }
         #endregion
+
+        #region Go To BoardBot
+        public ICommand ToBoardBotCommand => new Command(OnToBoardBotCommand);
+
+        public async void OnToBoardBotCommand()
+        {
+            Page p = new Views.BoardBot();
+            await App.Current.MainPage.Navigation.PushAsync(p);
+
+        }
+        #endregion
     }
 }

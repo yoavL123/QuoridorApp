@@ -44,5 +44,12 @@ namespace QuoridorApp.Models
             PawnTileStatus = DicPawnStatus["Empty"];
             //this.BackgroundColor = pawnTileColStatus[pawnTileStatus];
         }
+
+        public PawnTile(PawnTile other)
+        {
+            this.r = other.r;
+            this.c = other.c;
+            this.PawnTileStatus = other.PawnTileStatus;
+        }
     }
 }

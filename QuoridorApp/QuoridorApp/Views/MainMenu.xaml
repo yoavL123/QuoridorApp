@@ -14,9 +14,10 @@
                 HorizontalOptions="CenterAndExpand" />
 
             <Label Text="{Binding UserName, StringFormat='Welcome {0}!'}"
-                VerticalOptions="CenterAndExpand" 
+                VerticalOptions="CenterAndExpand"
                 HorizontalOptions="CenterAndExpand" />
             <Button Text="Go To Board!" Command="{Binding ToBoardCommand}" />
+            <Button Text="Go To Board Bot!" Command="{Binding ToBoardBotCommand}" />
             <Button Text="Log out!" Command="{Binding SubmitSignOutCommand}" />
 
             

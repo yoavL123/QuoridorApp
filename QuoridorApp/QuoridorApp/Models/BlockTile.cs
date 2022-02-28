@@ -35,5 +35,11 @@ namespace QuoridorApp.Models
             BlockTileStatus = DicBlockStatus["Empty"];
             //this.BackgroundColor = pawnTileColStatus[pawnTileStatus];
         }
+        public BlockTile(BlockTile blockTile)
+        {
+            this.r = blockTile.r;
+            this.c = blockTile.c;
+            this.blockTileStatus = blockTile.blockTileStatus;
+        }
     }
 }

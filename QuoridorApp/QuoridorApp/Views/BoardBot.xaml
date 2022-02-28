@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:local="clr-namespace:QuoridorApp.ViewModels"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuoridorApp.Views.BoardBot">
+
+    <!-- Binding to "BoardViewModel" -->
+    <ContentPage.BindingContext>
+        <local:BoardViewModel></local:BoardViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <Style x:Key="SignUpStack" TargetType="StackLayout">
+            <Setter Property="Orientation" Value="Vertical"/>
+            <Setter Property="Padding" Value="30"/>
+            <Setter Property="Spacing" Value="40"/>
+        </Style>
+        <Style x:Key="SignUpButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Coral"/>
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="FontSize" Value="Medium" />
+
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <!-- Here, background color sets only the color of the board, so it sets those spaces which is very nice -->
+        <AbsoluteLayout BackgroundColor="DarkRed" x:Name="theBoard" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>
