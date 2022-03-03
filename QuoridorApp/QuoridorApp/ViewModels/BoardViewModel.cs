@@ -380,16 +380,18 @@ namespace QuoridorApp.ViewModels
         }
         public void MoveBack(int oldX, int oldY, bool realGame = true)
         {
+            
             curPlayer = 1 - curPlayer;
             pawnBoard[playerLoc[curPlayer, 0], playerLoc[curPlayer, 1]].PawnTileStatus = PawnTile.DicPawnStatus["Empty"];
             playerLoc[curPlayer, 0] = oldX;
             playerLoc[curPlayer, 1] = oldY;
             pawnBoard[playerLoc[curPlayer, 0], playerLoc[curPlayer, 1]].PawnTileStatus = curPlayer + 1;
+            
         }
         /*
          * realGame - is it a real game or a simulated one
          */
-        public void Move(int newX, int newY, bool realGame = true)
+        public void Move(int newX, int newY, bool realGame = true, int depth = 1)
         {
             if (!CanMove(newX, newY)) return;
             int player = curPlayer;
@@ -424,11 +426,11 @@ namespace QuoridorApp.ViewModels
             
             curPlayer++;
             curPlayer %= 2;
-            if (isBot[curPlayer])
+            if (isBot[curPlayer] && depth == 1)
             {
                 BotViewModel bot = new BotViewModel();
                 //bot.MakeMove(ref this, curPlayer, 1);
-                bot.MakeMove(this, curPlayer, 1, true);
+                bot.MakeMove(this, curPlayer, depth, true);
                 //.curPlayer++;
                 //.curPlayer %= 2;
             }
@@ -532,7 +534,7 @@ namespace QuoridorApp.ViewModels
         }
 
         
-        public void PlaceBlockHor(int X, int Y)
+        public void PlaceBlockHor(int X, int Y, int depth = 1)
         {
             if (!CanPlaceBlockHor(X, Y)) return;
             int player = curPlayer;
@@ -583,11 +585,11 @@ namespace QuoridorApp.ViewModels
             curPlayer = 1 - curPlayer;
             
             
-            if (isBot[curPlayer])
+            if (isBot[curPlayer] && depth == 1)
             {
                 BotViewModel bot = new BotViewModel();
                 //bot.MakeMove(ref , curPlayer, 1);
-                bot.MakeMove(this, curPlayer, 1, true);
+                bot.MakeMove(this, curPlayer, depth, true);
             }
         }
 
@@ -608,7 +610,12 @@ namespace QuoridorApp.ViewModels
             curPlayer = 1 - curPlayer;
             centerBlocked[X, Y] = false;
             centerTile[X, Y].clear();
-
+            /*
+            if(verBlockBoard[X, Y].BlockTileStatus != curPlayer)
+            {
+                Application.Current.MainPage.DisplayAlert("Oops", $"Error while deleting", "Back to home");
+            }
+            */
             verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
             verBlockBoard[X, Y + 1].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
             blocksLeft[curPlayer]++;
@@ -681,7 +688,7 @@ namespace QuoridorApp.ViewModels
             return true;
         }
 
-        public void PlaceBlockVer(int X, int Y)
+        public void PlaceBlockVer(int X, int Y, int depth = 1)
         {
             /*
             int player = curPlayer;
@@ -741,11 +748,11 @@ namespace QuoridorApp.ViewModels
             blocksLeft[curPlayer]--;
             curPlayer = 1 - curPlayer;
             
-            if (isBot[curPlayer])
+            if (isBot[curPlayer] && depth == 1)
             {
                 BotViewModel bot = new BotViewModel();
                 //bot.MakeMove(ref , curPlayer, 1);
-                bot.MakeMove(this, curPlayer, 1, true);
+                bot.MakeMove(this, curPlayer, depth, true);
             }
             return;
         }
