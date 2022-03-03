@@ -33,6 +33,7 @@ namespace QuoridorApp.ViewModels
         2 - second player
         */
         //public PawnTile[,] pawnBoard = new PawnTile[SIZE, SIZE];
+        bool realGame;
         public PawnTile[,] pawnBoard;
 
         public BlockTile[,] horBlockBoard; // horizontal block board
@@ -118,9 +119,8 @@ namespace QuoridorApp.ViewModels
         }
         */
 
-        public BoardViewModel(BoardViewModel b)
+        public BoardViewModel(BoardViewModel b, bool isReal = true)
         {
-
             pawnBoard = new PawnTile[SIZE, SIZE];
             horBlockBoard = new BlockTile[SIZE, SIZE - 1];
             verBlockBoard = new BlockTile[SIZE - 1, SIZE];
@@ -160,9 +160,10 @@ namespace QuoridorApp.ViewModels
             Copy1D(ref isBot, b.isBot);
             curPlayer = b.curPlayer;
             blockStatus = b.blockStatus;
+            realGame = b.realGame && isReal;
             
         }
-        public BoardViewModel(AbsoluteLayout theBoard, bool isBot0 = false, bool isBot1 = false)
+        public BoardViewModel(AbsoluteLayout theBoard, bool isBot0 = false, bool isBot1 = false, bool realGame = true)
         {
             isBot = new bool[2]{ isBot0, isBot1};
             pawnBoard = new PawnTile[SIZE, SIZE];
@@ -182,7 +183,7 @@ namespace QuoridorApp.ViewModels
                         //BackgroundColor = Color.Black,
                         //BackgroundColor = BoardViewModel.pawnTileColStatus[vm.pawnBoard[i, j]],
                         //Command = new Command(() => Move(0, i, j, this))
-                        Command = new Command(() => Move(ri, rj, this))
+                        Command = new Command(() => this.Move(ri, rj, realGame))
                     };
                     double startX = i * PAWN_TILE_SIZE + i * BLOCK_TILE_SMALL;
                     double startY = j * PAWN_TILE_SIZE + j * BLOCK_TILE_SMALL;
@@ -195,7 +196,7 @@ namespace QuoridorApp.ViewModels
                         // Create a block tile:
                         horBlockBoard[i, j] = new BlockTile(i, j)
                         {
-                            Command = new Command(() => PlaceBlockHor(ri, rj, this))
+                            Command = new Command(() => this.PlaceBlockHor(ri, rj))
                         };
                         startY += PAWN_TILE_SIZE;
                         Rectangle blockBounds = new Rectangle(startX, startY, BLOCK_TILE_BIG, BLOCK_TILE_SMALL);
@@ -209,7 +210,7 @@ namespace QuoridorApp.ViewModels
                     {
                         verBlockBoard[i, j] = new BlockTile(i, j)
                         {
-                            Command = new Command(() => PlaceBlockVer(ri, rj, this))
+                            Command = new Command(() => this.PlaceBlockVer(ri, rj))
                         };
                         startX += PAWN_TILE_SIZE;
                         Rectangle blockBounds = new Rectangle(startX, startY, BLOCK_TILE_SMALL, BLOCK_TILE_BIG);
@@ -255,9 +256,10 @@ namespace QuoridorApp.ViewModels
             return (playerLoc[0, 1] == SIZE - 1) || (playerLoc[1, 1] == 0);
         }
 
-        public bool CanMove(int curX, int curY, int newX, int newY)
+        public bool CanMoveDFS(int curX, int curY, int newX, int newY)
         {
             if (newX < 0 || newX >= SIZE || newY < 0 || newY >= SIZE) return false;
+            if (Math.Abs(curX - newX) + Math.Abs(curY - newY) != 1) return false;
             if (curX == newX)
             {
                 if (horBlockBoard[curX, Math.Min(curY, newY)].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
@@ -268,6 +270,7 @@ namespace QuoridorApp.ViewModels
             }
             else
             {
+                if (curY != newY) return false;
                 if (verBlockBoard[Math.Min(curX, newX), curY].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
                 {
                     return false;
@@ -275,7 +278,7 @@ namespace QuoridorApp.ViewModels
                 return true;
             }
         }
-        
+
         private void DFS(int curX, int curY, bool[,] vis)
         {
             int[] xdir = new int[] { -1, 1, 0, 0 };
@@ -288,7 +291,7 @@ namespace QuoridorApp.ViewModels
                 if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) continue;
                 
                 if (vis[x, y]) continue;
-                if (!CanMove(curX, curY, x, y)) continue;
+                if (!CanMoveDFS(curX, curY, x, y)) continue;
                 vis[x, y] = true;
                 DFS(x, y, vis);
             }
@@ -321,52 +324,68 @@ namespace QuoridorApp.ViewModels
         }
 
 
-        public bool CanMove(int newX, int newY, BoardViewModel myBoard)
+        public bool CanMove(int newX, int newY)
         {
+            if (newX < 0 || newX >= SIZE || newY < 0 || newY >= SIZE) return false;
             if (blockStatus != "Empty") return false;
-            int player = myBoard.curPlayer;
-            if (Math.Abs(myBoard.playerLoc[player, 0] - newX) + Math.Abs(myBoard.playerLoc[player, 1] - newY) == 0) return false;
+            int player = curPlayer;
+            if (Math.Abs(playerLoc[player, 0] - newX) + Math.Abs(playerLoc[player, 1] - newY) == 0) return false;
 
-            playerLoc = myBoard.playerLoc;
-            int curX = myBoard.playerLoc[player, 0];
-            int curY = myBoard.playerLoc[player, 1];
+            int curX = playerLoc[player, 0];
+            int curY = playerLoc[player, 1];
             if (Math.Abs(playerLoc[player, 0] - newX) + Math.Abs(playerLoc[player, 1] - newY) > 1)
             {
-                int nextPlayer = (player + 1) % 2;
+                int nextPlayer = 1 - player;
+                if(!CanMoveDFS(curX, curY, playerLoc[nextPlayer, 0], playerLoc[nextPlayer, 1]))
+                {
+                    return false;
+                }
+                if (!CanMoveDFS(playerLoc[nextPlayer, 0], playerLoc[nextPlayer, 1], newX, newY))
+                {
+                    return false;
+                }
+                return true;
+                /*
                 if (Math.Abs(playerLoc[player, 0] - playerLoc[nextPlayer, 0]) + Math.Abs(playerLoc[player, 1] - playerLoc[nextPlayer, 1]) != 1)
                 {
                     return false;
                 }
+                
+                if (Math.Abs(playerLoc[nextPlayer, 0] - newX) + Math.Abs(playerLoc[nextPlayer, 1] - newY) != 1)
+                {
+                    return false;
+                }
+                
                 curX = playerLoc[nextPlayer, 0];
                 curY = playerLoc[nextPlayer, 1];
+                */
             }
 
             if (curX == newX)
             {
-                if (myBoard.horBlockBoard[curX, Math.Min(curY, newY)].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
+                if (horBlockBoard[curX, Math.Min(curY, newY)].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
                 {
                     return false;
                 }
             }
             else
             {
-                if (myBoard.verBlockBoard[Math.Min(curX, newX), curY].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
+                if (verBlockBoard[Math.Min(curX, newX), curY].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
                 {
                     return false;
                 }
             }
-            if (myBoard.pawnBoard[newX, newY].PawnTileStatus != PawnTile.DicPawnStatus["Empty"]) return false;
+            if (pawnBoard[newX, newY].PawnTileStatus != PawnTile.DicPawnStatus["Empty"]) return false;
             return true;
         }
 
-        public void Move(int newX, int newY, BoardViewModel myBoard)
+        /*
+         * realGame - is it a real game or a simulated one
+         */
+        public void Move(int newX, int newY, bool realGame = true)
         {
-            if (!CanMove(newX, newY, myBoard)) return;
-            int player = myBoard.curPlayer;
-            
-            
-            
-            
+            if (!CanMove(newX, newY)) return;
+            int player = curPlayer;
             
             int curX = playerLoc[player, 0];
             int curY = playerLoc[player, 1];
@@ -381,26 +400,30 @@ namespace QuoridorApp.ViewModels
             
             //Console.WriteLine(playerLoc[player, 0]);
             //Console.WriteLine(pawnBoard[playerLoc[player, 0], playerLoc[player, 1]].PawnTileStatus);
-            myBoard.pawnBoard[myBoard.playerLoc[player, 0], myBoard.playerLoc[player, 1]].PawnTileStatus = PawnTile.DicPawnStatus["Empty"];
-            myBoard.playerLoc[player, 0] = newX;
-            myBoard.playerLoc[player, 1] = newY;
-            myBoard.pawnBoard[myBoard.playerLoc[player, 0], myBoard.playerLoc[player, 1]].PawnTileStatus = player+1;
+            pawnBoard[playerLoc[player, 0], playerLoc[player, 1]].PawnTileStatus = PawnTile.DicPawnStatus["Empty"];
+            playerLoc[player, 0] = newX;
+            playerLoc[player, 1] = newY;
+            pawnBoard[playerLoc[player, 0], playerLoc[player, 1]].PawnTileStatus = player+1;
 
-            if (myBoard.CheckWon())
+            if (CheckWon())
             {
-                Application.Current.MainPage.DisplayAlert("Game ended", $"Player {player + 1} won!", "Back to home");
-                OnToMainMenuCommand();
+                if(realGame)
+                {
+                    Application.Current.MainPage.DisplayAlert("Game ended", $"Player {player + 1} won!", "Back to home");
+                    OnToMainMenuCommand();
+                }
                 return;
             }
             
-            myBoard.curPlayer++;
-            myBoard.curPlayer %= 2;
-            if (myBoard.isBot[myBoard.curPlayer])
+            curPlayer++;
+            curPlayer %= 2;
+            if (isBot[curPlayer])
             {
                 BotViewModel bot = new BotViewModel();
-                bot.MakeMove(ref myBoard, myBoard.curPlayer, 1);
-                //myBoard.curPlayer++;
-                //myBoard.curPlayer %= 2;
+                //bot.MakeMove(ref this, curPlayer, 1);
+                bot.MakeMove(this, curPlayer, 1, true);
+                //.curPlayer++;
+                //.curPlayer %= 2;
             }
 
         }
@@ -408,27 +431,27 @@ namespace QuoridorApp.ViewModels
         Returns true iff a new block is placed.
         */
         
-        public bool CanPlaceBlockHor(int X, int Y, BoardViewModel myBoard2)
+        public bool CanPlaceBlockHor(int X, int Y)
         {
-            BoardViewModel myBoard = new BoardViewModel(myBoard2);
-            int player = myBoard.curPlayer;
-            if (myBoard.blocksLeft[player] == 0) return false;
+            BoardViewModel board2 = new BoardViewModel(this, false);
+            int player = board2.curPlayer;
+            if (board2.blocksLeft[player] == 0) return false;
 
-            if (myBoard.horBlockBoard[X, Y].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
+            if (board2.horBlockBoard[X, Y].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
             {
-                myBoard.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
-                blockStatus = "Empty";
+                board2.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
+                board2.blockStatus = "Empty";
                 return true;
             }
-            if (blockStatus == "Ver" || myBoard.horBlockBoard[X, Y].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
+            if (board2.blockStatus == "Ver" || board2.horBlockBoard[X, Y].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
             {
                 return false;
             }
 
-            if (blockStatus == "Empty") // first of the 2 blocks
+            if (board2.blockStatus == "Empty") // first of the 2 blocks
             {
-                myBoard.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
-                blockStatus = "Hor";
+                board2.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
+                board2.blockStatus = "Hor";
                 return true;
             }
             // Now check if the last pending block is next to this
@@ -439,7 +462,7 @@ namespace QuoridorApp.ViewModels
             {
                 if (nextX >= 0 && nextX < SIZE && nextY >= 0 && nextY < SIZE - 1)
                 {
-                    if (myBoard.horBlockBoard[nextX, nextY].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
+                    if (board2.horBlockBoard[nextX, nextY].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
                     {
                         hasNextTo = true;
                         break;
@@ -450,41 +473,44 @@ namespace QuoridorApp.ViewModels
             }
 
             if (!hasNextTo) return false;
-            if (myBoard.centerBlocked[Math.Min(X, nextX), Y])
+            if (board2.centerBlocked[Math.Min(X, nextX), Y])
             {
                 return false;
             }
-            myBoard.centerBlocked[Math.Min(X, nextX), Y] = true;
-            myBoard.centerTile[Math.Min(X, nextX), Y].fill();
+            board2.centerBlocked[Math.Min(X, nextX), Y] = true;
+            board2.centerTile[Math.Min(X, nextX), Y].fill();
 
-            blockStatus = "Empty";
-            myBoard.horBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
-            myBoard.horBlockBoard[nextX, nextY].BlockTileStatus = curPlayer + 1;
+            board2.blockStatus = "Empty";
+            board2.horBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
+            board2.horBlockBoard[nextX, nextY].BlockTileStatus = curPlayer + 1;
 
-            if (!CanWin(0) || !CanWin(1))
+            if (!board2.CanWin(0) || !board2.CanWin(1))
             {
-                blockStatus = "Hor";
-                myBoard.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
-                myBoard.horBlockBoard[nextX, nextY].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
-                myBoard.centerTile[Math.Min(X, nextX), Y].clear();
+                board2.blockStatus = "Hor";
+                board2.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
+                board2.horBlockBoard[nextX, nextY].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
+                board2.centerTile[Math.Min(X, nextX), Y].clear();
                 return false;
             }
-            blockStatus = "Hor";
-            myBoard.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
-            myBoard.horBlockBoard[nextX, nextY].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
-            myBoard.centerTile[Math.Min(X, nextX), Y].clear();
+            board2.blockStatus = "Hor";
+            board2.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
+            board2.horBlockBoard[nextX, nextY].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
+            board2.centerTile[Math.Min(X, nextX), Y].clear();
             return true;
         }
+
+
         
-        public void PlaceBlockHor(int X, int Y, BoardViewModel myBoard)
+        
+        public void PlaceBlockHor(int X, int Y)
         {
-            if (!CanPlaceBlockHor(X, Y, myBoard)) return;
-            int player = myBoard.curPlayer;
+            if (!CanPlaceBlockHor(X, Y)) return;
+            int player = curPlayer;
             
 
-            if(myBoard.horBlockBoard[X, Y].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
+            if(horBlockBoard[X, Y].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
             {
-                myBoard.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
+                horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
                 blockStatus = "Empty";
                 return;
             }
@@ -492,7 +518,7 @@ namespace QuoridorApp.ViewModels
 
             if(blockStatus == "Empty") // first of the 2 blocks
             {
-                myBoard.horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
+                horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
                 blockStatus = "Hor";
                 return;
             }
@@ -504,7 +530,7 @@ namespace QuoridorApp.ViewModels
             {
                 if (nextX >= 0 && nextX < SIZE && nextY >= 0 && nextY < SIZE - 1)
                 {
-                    if(myBoard.horBlockBoard[nextX, nextY].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
+                    if(horBlockBoard[nextX, nextY].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
                     {
                         hasNextTo = true;
                         break;
@@ -516,45 +542,47 @@ namespace QuoridorApp.ViewModels
 
             
             
-            myBoard.centerBlocked[Math.Min(X, nextX), Y] = true;
-            myBoard.centerTile[Math.Min(X, nextX), Y].fill();
+            centerBlocked[Math.Min(X, nextX), Y] = true;
+            centerTile[Math.Min(X, nextX), Y].fill();
             
             blockStatus = "Empty";
-            myBoard.horBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
-            myBoard.horBlockBoard[nextX, nextY].BlockTileStatus = curPlayer + 1;
+            horBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
+            horBlockBoard[nextX, nextY].BlockTileStatus = curPlayer + 1;
 
-            myBoard.curPlayer++;
-            myBoard.curPlayer %= 2;
-            myBoard.blocksLeft[player]--;
-            if (myBoard.isBot[myBoard.curPlayer])
+            curPlayer = 1 - curPlayer;
+            
+            blocksLeft[player]--;
+            if (isBot[curPlayer])
             {
                 BotViewModel bot = new BotViewModel();
-                bot.MakeMove(ref myBoard, myBoard.curPlayer, 1);
+                //bot.MakeMove(ref , curPlayer, 1);
+                bot.MakeMove(this, curPlayer, 1, true);
             }
         }
 
 
-        public bool PlaceBlockVer(int X, int Y, BoardViewModel myBoard)
+        public bool CanPlaceBlockVer(int X, int Y)
         {
-            int player = myBoard.curPlayer;
-            if (myBoard.blocksLeft[player] == 0) return false;
-            
-            if (myBoard.verBlockBoard[X, Y].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
+            BoardViewModel board2 = new BoardViewModel(this, false);
+            int player = board2.curPlayer;
+            if (board2.blocksLeft[player] == 0) return false;
+
+            if (board2.verBlockBoard[X, Y].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
             {
-                myBoard.verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
-                blockStatus = "Empty";
-                return false;
+                board2.verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
+                board2.blockStatus = "Empty";
+                return true;
             }
-            if (blockStatus == "Hor" || myBoard.verBlockBoard[X, Y].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
+            if (board2.blockStatus == "Hor" || board2.verBlockBoard[X, Y].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
             {
                 return false;
             }
 
-            if (blockStatus == "Empty") // first of the 2 blocks
+            if (board2.blockStatus == "Empty") // first of the 2 blocks
             {
-                myBoard.verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
-                blockStatus = "Ver";
-                return false;
+                board2.verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
+                board2.blockStatus = "Ver";
+                return true;
             }
             // Now check if the last pending block is next to this
             bool hasNextTo = false;
@@ -564,7 +592,7 @@ namespace QuoridorApp.ViewModels
             {
                 if (nextX >= 0 && nextX < SIZE - 1 && nextY >= 0 && nextY < SIZE)
                 {
-                    if (myBoard.verBlockBoard[nextX, nextY].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
+                    if (board2.verBlockBoard[nextX, nextY].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
                     {
                         hasNextTo = true;
                         break;
@@ -575,28 +603,90 @@ namespace QuoridorApp.ViewModels
             }
 
             if (!hasNextTo) return false;
-            if (myBoard.centerBlocked[X, Math.Min(Y, nextY)])
+            if (board2.centerBlocked[X, Math.Min(Y, nextY)])
             {
                 return false;
             }
-            myBoard.centerBlocked[X, Math.Min(Y, nextY)] = true;
-            myBoard.centerTile[X, Math.Min(Y, nextY)].fill();
-            blockStatus = "Empty";
-            myBoard.verBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
-            myBoard.verBlockBoard[nextX, nextY].BlockTileStatus = curPlayer + 1;
-            if (!CanWin(0) || !CanWin(1))
+            board2.centerBlocked[X, Math.Min(Y, nextY)] = true;
+            board2.centerTile[X, Math.Min(Y, nextY)].fill();
+            board2.blockStatus = "Empty";
+            board2.verBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
+            board2.verBlockBoard[nextX, nextY].BlockTileStatus = curPlayer + 1;
+            if (!board2.CanWin(0) || !board2.CanWin(1))
             {
-                blockStatus = "Ver";
-                myBoard.verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
-                myBoard.verBlockBoard[nextX, nextY].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
-                myBoard.centerTile[X, Math.Min(Y, nextY)].clear();
+                board2.blockStatus = "Ver";
+                board2.verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
+                board2.verBlockBoard[nextX, nextY].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
+                board2.centerTile[X, Math.Min(Y, nextY)].clear();
                 return false;
             }
 
-            myBoard.curPlayer++;
-            myBoard.curPlayer %= 2;
-            myBoard.blocksLeft[player]--;
+            board2.curPlayer++;
+            board2.curPlayer %= 2;
+            board2.blocksLeft[player]--;
             return true;
+        }
+
+        public void PlaceBlockVer(int X, int Y)
+        {
+            /*
+            int player = curPlayer;
+            if (blocksLeft[player] == 0) return false;
+            
+            if (verBlockBoard[X, Y].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
+            {
+                verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
+                blockStatus = "Empty";
+                return false;
+            }
+            if (blockStatus == "Hor" || verBlockBoard[X, Y].BlockTileStatus != BlockTile.DicBlockStatus["Empty"])
+            {
+                return false;
+            }
+            */
+            if (blockStatus == "Empty") // first of the 2 blocks
+            {
+                verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
+                blockStatus = "Ver";
+                return;
+            }
+            // Now check if the last pending block is next to this
+            
+            if (!CanPlaceBlockVer(X, Y)) return;
+            bool hasNextTo = false;
+            int nextX = X; int nextY = Y + 1;
+
+            for (int i = 0; i < 2 && !hasNextTo; i++)
+            {
+                if (nextX >= 0 && nextX < SIZE - 1 && nextY >= 0 && nextY < SIZE)
+                {
+                    if (verBlockBoard[nextX, nextY].BlockTileStatus == BlockTile.DicBlockStatus["Pending"])
+                    {
+                        hasNextTo = true;
+                        break;
+                    }
+                }
+                nextX = X;
+                nextY = Y - 1;
+            }
+
+            
+            centerBlocked[X, Math.Min(Y, nextY)] = true;
+            centerTile[X, Math.Min(Y, nextY)].fill();
+            blockStatus = "Empty";
+            verBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
+            verBlockBoard[nextX, nextY].BlockTileStatus = curPlayer + 1;
+            
+            curPlayer++;
+            curPlayer %= 2;
+            blocksLeft[curPlayer]--;
+            if (isBot[curPlayer])
+            {
+                BotViewModel bot = new BotViewModel();
+                //bot.MakeMove(ref , curPlayer, 1);
+                bot.MakeMove(this, curPlayer, 1, true);
+            }
+            return;
         }
     }
 }

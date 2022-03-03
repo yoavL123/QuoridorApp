@@ -10,6 +10,7 @@ namespace QuoridorApp.ViewModels
         const int SIZE = 9;
         const int INF = (int)1e9;
         const int MAX_DEPTH = 2;
+        
 
         public BotViewModel()
         {
@@ -54,7 +55,7 @@ namespace QuoridorApp.ViewModels
                     if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) continue;
 
                     if (dist[x, y] != INF) continue;
-                    if (!board.CanMove(curX, curY, x, y)) continue;
+                    if (!board.CanMoveDFS(curX, curY, x, y)) continue;
                     dist[x, y] = dist[curX, curY] + 1;
                     q.Enqueue((x, y));
                 }
@@ -90,6 +91,7 @@ namespace QuoridorApp.ViewModels
             if (won(board, player)) return INF;
             if (lost(board, player)) return -INF;
             int myDist = DistToWin(board, player);
+            if (myDist <= 1) return INF;
             int hisDist = DistToWin(board, 1 - player);
 
             int myBlocks = board.blocksLeft[player];
@@ -105,22 +107,26 @@ namespace QuoridorApp.ViewModels
         [bestX, bestY, bestEval]
 
         */
-        public double[] MakePawnMove(ref BoardViewModel board, int player, int depth)
+        public double[] MakePawnMove(BoardViewModel board, int player, int depth)
         {
+            if(won(board, player)) return new double[] { -1, -1, INF};
+            if (lost(board, player)) return new double[] { -1, -1, -INF };
             int bestX = -1;
             int bestY = -1;
-            double bestEval = -INF;
+            double bestEval = -INF - 1;
             for(int i = 0; i < SIZE; i++)
             {
                 for (int j = 0; j < SIZE; j++)
                 {
-                    BoardViewModel nBoard = new BoardViewModel(board);
-                    if(nBoard.CanMove(i, j, nBoard))
+                    
+                    if(board.CanMove(i, j))
                     {
+                        BoardViewModel nBoard = new BoardViewModel(board);
+                        nBoard.Move(i, j, false);
                         double curEval;
-                        if(depth < MAX_DEPTH || true)
+                        if(depth < MAX_DEPTH)
                         {
-                            curEval = MakeMove(ref nBoard, 1 - player, depth + 1);
+                            curEval = -MakeMove(nBoard, 1 - player, depth + 1, false);
                         }
                         else
                         {
@@ -132,6 +138,19 @@ namespace QuoridorApp.ViewModels
                             bestY = j;
                             bestEval = curEval;
                         }
+                        else if (curEval == bestEval)
+                        {
+                            var rand = new Random();
+
+                            // Generate and display 5 random byte (integer) values.
+                            var bytes = new byte[2];
+                            if (rand.Next() == 0)
+                            {
+                                bestX = i;
+                                bestY = j;
+                                bestEval = curEval;
+                            }
+                        }
                     }
                 }
             }
@@ -140,27 +159,32 @@ namespace QuoridorApp.ViewModels
         }
 
 
-        public double[] MakeHorBlockMove(ref BoardViewModel board, int player, int depth)
+        public double[] MakeHorBlockMove(BoardViewModel board, int player, int depth)
         {
+            const int DIF = 0;
+            if (won(board, player)) return new double[] { -1, -1, INF };
+            if (lost(board, player)) return new double[] { -1, -1, -INF };
             int bestX = -1;
             int bestY = -1;
-            double bestEval = -INF;
-            for (int i = 0; i < SIZE; i++)
+            double bestEval = -INF - 1;
+            for (int i = 0; i < SIZE - 1; i++)
             {
-                for (int j = 0; j < SIZE - 2; j++)
+                for (int j = 0; j < SIZE - 1; j++)
                 {
+                    if (!board.CanPlaceBlockHor(i, j)) continue;
                     BoardViewModel nBoard = new BoardViewModel(board);
-                    bool b1 = nBoard.CanPlaceBlockHor(i, j, nBoard);
-                    if (!b1) continue;
-                    bool b2 = nBoard.CanPlaceBlockHor(i, j + 1, nBoard);
+                    //bool b1 = nBoard.CanPlaceBlockHor(i, j);
+                    //if (!b1) continue;
+                    nBoard.PlaceBlockHor(i, j);
+                    bool b2 = nBoard.CanPlaceBlockHor(i + 1, j);
                     if (!b2) continue;
-                    nBoard.PlaceBlockHor(i, j, nBoard);
-                    nBoard.PlaceBlockHor(i, j+1, nBoard);
-
+                    
+                    nBoard.PlaceBlockHor(i + 1, j);
+                    //if (-evaluate(nBoard, 1 - player) + DIF < bestEval) continue;
                     double curEval;
-                    if (depth < MAX_DEPTH || true)
+                    if (depth < MAX_DEPTH)
                     {
-                        curEval = MakeMove(ref nBoard, 1 - player, depth + 1);
+                        curEval = -MakeMove(nBoard, 1 - player, depth + 1, false);
                     }
                     else
                     {
@@ -172,42 +196,74 @@ namespace QuoridorApp.ViewModels
                         bestY = j;
                         bestEval = curEval;
                     }
-                    
-                }
-            }
-            double[] res = new double[] { bestX, bestY, bestEval };
-            return res;
-        }
-        public double[] MakeVerBlockMove(ref BoardViewModel board, int player, int depth)
-        {
-            int bestX = -1;
-            int bestY = -1;
-            double bestEval = -INF;
-            for (int i = 0; i < SIZE - 2; i++)
-            {
-                for (int j = 0; j < SIZE; j++)
-                {
-                    BoardViewModel nBoard = new BoardViewModel(board);
-                    bool b1 = nBoard.PlaceBlockVer(i, j, nBoard);
-                    bool b2 = nBoard.PlaceBlockVer(i + 1, j, nBoard);
-                    if (b1 && b2)
+                    else if (curEval == bestEval)
                     {
-                        double curEval;
-                        if (depth < MAX_DEPTH || true)
-                        {
-                            curEval = MakeMove(ref nBoard, 1 - player, depth + 1);
-                        }
-                        else
-                        {
-                            curEval = -evaluate(nBoard, 1 - player);
-                        }
-                        if (curEval > bestEval)
+                        var rand = new Random();
+
+                        // Generate and display 5 random byte (integer) values.
+                        var bytes = new byte[2];
+                        if (rand.Next() == 0)
                         {
                             bestX = i;
                             bestY = j;
                             bestEval = curEval;
                         }
                     }
+                }
+            }
+            double[] res = new double[] { bestX, bestY, bestEval };
+            return res;
+        }
+        public double[] MakeVerBlockMove(BoardViewModel board, int player, int depth)
+        {
+            const int DIF = 0;
+            if (won(board, player)) return new double[] { -1, -1, INF };
+            if (lost(board, player)) return new double[] { -1, -1, -INF };
+            int bestX = -1;
+            int bestY = -1;
+            double bestEval = -INF - 1;
+            for (int i = 0; i < SIZE - 1; i++)
+            {
+                for (int j = 0; j < SIZE - 1; j++)
+                {
+                    if (!board.CanPlaceBlockHor(i, j)) continue;
+                    BoardViewModel nBoard = new BoardViewModel(board, false);
+                    //bool b1 = nBoard.CanPlaceBlockVer(i, j);
+                    //if (!b1) continue;
+                    nBoard.PlaceBlockVer(i, j);
+                    bool b2 = nBoard.CanPlaceBlockVer(i, j+1);
+                    if (!b2) continue;
+                    nBoard.PlaceBlockVer(i, j+1);
+                    //if (-evaluate(nBoard, 1 - player) + DIF < bestEval) continue;
+                    double curEval;
+                    if (depth < MAX_DEPTH)
+                    {
+                        curEval = -MakeMove(nBoard, 1 - player, depth + 1, false);
+                    }
+                    else
+                    {
+                        curEval = -evaluate(nBoard, 1 - player);
+                    }
+                    if (curEval > bestEval)
+                    {
+                        bestX = i;
+                        bestY = j;
+                        bestEval = curEval;
+                    }
+                    else if(curEval == bestEval)
+                    {
+                        var rand = new Random();
+
+                        // Generate and display 5 random byte (integer) values.
+                        var bytes = new byte[2];
+                        if(rand.Next() == 0)
+                        {
+                            bestX = i;
+                            bestY = j;
+                            bestEval = curEval;
+                        }
+                    }
+                    
                 }
             }
             double[] res = new double[] { bestX, bestY, bestEval };
@@ -224,32 +280,41 @@ namespace QuoridorApp.ViewModels
             return Math.Max(a, Math.Max(b, c));
         }
 
-        public double MakeMove(ref BoardViewModel board, int player, int depth)
+        public double MakeMove(BoardViewModel board, int player, int depth, bool realGame)
         {
-            if(depth >= MAX_DEPTH) return -evaluate(board, player);
-            double[] pawnMoveRes = MakePawnMove(ref board, player, depth);
-            double[] horBlockMoveRes = MakeHorBlockMove(ref board, player, depth);
-            double[] verBlockMoveRes = MakeVerBlockMove(ref board, player, depth);
+            if(depth >= MAX_DEPTH) return evaluate(board, player);
+            double[] pawnMoveRes = MakePawnMove(board, player, depth);
+            //board.Move((int)pawnMoveRes[0], (int)pawnMoveRes[1], realGame);
+            //return pawnMoveRes[2];
+            
+            double[] horBlockMoveRes = MakeHorBlockMove(board, player, depth);
+            double[] verBlockMoveRes = MakeVerBlockMove(board, player, depth);
             //double[] pawnMoveRes = MakePawnMove(ref board, player, depth);
             double maxV = max3(pawnMoveRes[2], horBlockMoveRes[2], verBlockMoveRes[2]);
+            if (realGame)
+            {
+                //Application.Current.MainPage.DisplayAlert("maxV:", $"maxV: {maxV}, vPawn: {pawnMoveRes[2]}, vHor: {horBlockMoveRes[2]}, vVer: {verBlockMoveRes[2]}", "Back to home");
+            }
+
             if (pawnMoveRes[2] == maxV)
             {
-                board.Move((int)pawnMoveRes[0], (int)pawnMoveRes[1], board);
+                board.Move((int)pawnMoveRes[0], (int)pawnMoveRes[1], realGame);
             }
             else if (horBlockMoveRes[2] == maxV)
             {
-                board.PlaceBlockHor((int)horBlockMoveRes[0], (int)horBlockMoveRes[1], board);
-                board.PlaceBlockHor((int)horBlockMoveRes[0], (int)horBlockMoveRes[1] + 1, board);
+                board.PlaceBlockHor((int)horBlockMoveRes[0], (int)horBlockMoveRes[1]);
+                board.PlaceBlockHor((int)horBlockMoveRes[0] + 1, (int)horBlockMoveRes[1]);
             }
             else
             {
-                board.PlaceBlockVer((int)verBlockMoveRes[0], (int)verBlockMoveRes[1], board);
-                board.PlaceBlockVer((int)verBlockMoveRes[0] + 1, (int)verBlockMoveRes[1], board);
+                board.PlaceBlockVer((int)verBlockMoveRes[0], (int)verBlockMoveRes[1]);
+                board.PlaceBlockVer((int)verBlockMoveRes[0], (int)verBlockMoveRes[1] + 1);
             }
-            Application.Current.MainPage.DisplayAlert("maxV:", $"maxV: {maxV}, vPawn: {pawnMoveRes[2]}, vHor: {horBlockMoveRes[2]}, vVer: {verBlockMoveRes[2]}", "Back to home");
+            
 
 
             return maxV;
+            
         }
     }
 }
