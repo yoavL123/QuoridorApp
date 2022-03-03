@@ -9,7 +9,7 @@ namespace QuoridorApp.ViewModels
     {
         const int SIZE = 9;
         const int INF = (int)1e9;
-        const int MAX_DEPTH = 2;
+        const int MAX_DEPTH = 4;
         
 
         public BotViewModel()
@@ -26,7 +26,6 @@ namespace QuoridorApp.ViewModels
         {
             return won(board, 1 - player);
         }
-
 
         private int DistToWin(BoardViewModel board, int player)
         {
@@ -121,17 +120,21 @@ namespace QuoridorApp.ViewModels
                     
                     if(board.CanMove(i, j))
                     {
-                        BoardViewModel nBoard = new BoardViewModel(board);
-                        nBoard.Move(i, j, false);
+                        //BoardViewModel nBoard = new BoardViewModel(board);
+                        //nBoard.Move(i, j, false);
+                        int oldX = board.playerLoc[board.curPlayer, 0];
+                        int oldY = board.playerLoc[board.curPlayer, 1];
+                        board.Move(i, j);
                         double curEval;
                         if(depth < MAX_DEPTH)
                         {
-                            curEval = -MakeMove(nBoard, 1 - player, depth + 1, false);
+                            curEval = -MakeMove(board, 1 - player, depth + 1, false);
                         }
                         else
                         {
-                            curEval = -evaluate(nBoard, 1 - player);
+                            curEval = -evaluate(board, 1 - player);
                         }
+                        board.MoveBack(oldX, oldY);
                         if(curEval > bestEval)
                         {
                             bestX = i;
@@ -143,8 +146,8 @@ namespace QuoridorApp.ViewModels
                             var rand = new Random();
 
                             // Generate and display 5 random byte (integer) values.
-                            var bytes = new byte[2];
-                            if (rand.Next() == 0)
+                            //var bytes = new byte[2];
+                            if (rand.Next()%2 == 0)
                             {
                                 bestX = i;
                                 bestY = j;
@@ -171,25 +174,32 @@ namespace QuoridorApp.ViewModels
             {
                 for (int j = 0; j < SIZE - 1; j++)
                 {
+                    //bool prune = true;
+                    //if(abs(board.playerLoc[0, 0])
                     if (!board.CanPlaceBlockHor(i, j)) continue;
-                    BoardViewModel nBoard = new BoardViewModel(board);
+                    //BoardViewModel nBoard = new BoardViewModel(board);
                     //bool b1 = nBoard.CanPlaceBlockHor(i, j);
                     //if (!b1) continue;
-                    nBoard.PlaceBlockHor(i, j);
-                    bool b2 = nBoard.CanPlaceBlockHor(i + 1, j);
-                    if (!b2) continue;
+                    board.PlaceBlockHor(i, j);
+                    bool b2 = board.CanPlaceBlockHor(i + 1, j);
+                    if (!b2)
+                    {
+                        board.RemovePendingBlockHor(i, j);
+                        continue;
+                    }
                     
-                    nBoard.PlaceBlockHor(i + 1, j);
+                    board.PlaceBlockHor(i + 1, j);
                     //if (-evaluate(nBoard, 1 - player) + DIF < bestEval) continue;
                     double curEval;
                     if (depth < MAX_DEPTH)
                     {
-                        curEval = -MakeMove(nBoard, 1 - player, depth + 1, false);
+                        curEval = -MakeMove(board, 1 - player, depth + 1, false);
                     }
                     else
                     {
-                        curEval = -evaluate(nBoard, 1 - player);
+                        curEval = -evaluate(board, 1 - player);
                     }
+                    board.RemoveBlockHor(i, j);
                     if (curEval > bestEval)
                     {
                         bestX = i;
@@ -202,7 +212,7 @@ namespace QuoridorApp.ViewModels
 
                         // Generate and display 5 random byte (integer) values.
                         var bytes = new byte[2];
-                        if (rand.Next() == 0)
+                        if (rand.Next()%2 == 0)
                         {
                             bestX = i;
                             bestY = j;
@@ -222,28 +232,38 @@ namespace QuoridorApp.ViewModels
             int bestX = -1;
             int bestY = -1;
             double bestEval = -INF - 1;
+            Application.Current.MainPage.DisplayAlert("MakeVerBlockMove:", "starting", "OK");
             for (int i = 0; i < SIZE - 1; i++)
             {
                 for (int j = 0; j < SIZE - 1; j++)
                 {
-                    if (!board.CanPlaceBlockHor(i, j)) continue;
-                    BoardViewModel nBoard = new BoardViewModel(board, false);
+                    if (!board.CanPlaceBlockVer(i, j)) continue;
+                    //BoardViewModel nBoard = new BoardViewModel(board, false);
                     //bool b1 = nBoard.CanPlaceBlockVer(i, j);
                     //if (!b1) continue;
-                    nBoard.PlaceBlockVer(i, j);
-                    bool b2 = nBoard.CanPlaceBlockVer(i, j+1);
-                    if (!b2) continue;
-                    nBoard.PlaceBlockVer(i, j+1);
+                    board.PlaceBlockVer(i, j);
+                    bool b2 = board.CanPlaceBlockVer(i, j+1);
+                    if (!b2)
+                    {
+                        board.RemovePendingBlockVer(i, j);
+                        continue;
+                    }
+                    board.PlaceBlockVer(i, j+1);
                     //if (-evaluate(nBoard, 1 - player) + DIF < bestEval) continue;
                     double curEval;
+                    //Application.Current.MainPage.DisplayAlert("MakeVerBlockMove:", "depth = " + depth, "OK");
                     if (depth < MAX_DEPTH)
                     {
-                        curEval = -MakeMove(nBoard, 1 - player, depth + 1, false);
+                        //Application.Current.MainPage.DisplayAlert("MakeVerBlockMove:", "making move" + depth, "OK");
+                        curEval = -MakeMove(board, 1 - player, depth + 1, false);
                     }
                     else
                     {
-                        curEval = -evaluate(nBoard, 1 - player);
+                        //Application.Current.MainPage.DisplayAlert("MakeVerBlockMove:", "evaluating" + depth, "OK");
+                        curEval = -evaluate(board, 1 - player);
                     }
+
+                    board.RemoveBlockVer(i, j);
                     if (curEval > bestEval)
                     {
                         bestX = i;
@@ -256,7 +276,7 @@ namespace QuoridorApp.ViewModels
 
                         // Generate and display 5 random byte (integer) values.
                         var bytes = new byte[2];
-                        if(rand.Next() == 0)
+                        if(rand.Next()%2 == 0)
                         {
                             bestX = i;
                             bestY = j;
