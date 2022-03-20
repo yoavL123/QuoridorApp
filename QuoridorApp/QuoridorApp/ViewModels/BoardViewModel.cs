@@ -33,7 +33,7 @@ namespace QuoridorApp.ViewModels
         2 - second player
         */
         //public PawnTile[,] pawnBoard = new PawnTile[SIZE, SIZE];
-        bool realGame;
+        public bool realGame;
         public PawnTile[,] pawnBoard;
 
         public BlockTile[,] horBlockBoard; // horizontal block board
@@ -163,7 +163,7 @@ namespace QuoridorApp.ViewModels
             realGame = b.realGame && isReal;
             
         }
-        public BoardViewModel(AbsoluteLayout theBoard, bool isBot0 = false, bool isBot1 = false, bool realGame = true)
+        public BoardViewModel(AbsoluteLayout theBoard, bool isBot0 = false, bool isBot1 = false, bool isRealGame = true)
         {
             isBot = new bool[2]{ isBot0, isBot1};
             pawnBoard = new PawnTile[SIZE, SIZE];
@@ -242,6 +242,7 @@ namespace QuoridorApp.ViewModels
             pawnBoard[SIZE / 2, SIZE-1].PawnTileStatus = PawnTile.DicPawnStatus["Player2"];
             playerLoc = new int[,] { { SIZE / 2, 0 }, { SIZE / 2, SIZE - 1 } };
             curPlayer = 0; // this is the current player's turn
+            this.realGame = isRealGame;
             //HandleGame(this);
         }
         public async void OnToMainMenuCommand()
@@ -393,6 +394,10 @@ namespace QuoridorApp.ViewModels
          */
         public void Move(int newX, int newY, bool realGame = true, int depth = 1)
         {
+            if(realGame)
+            {
+                Console.WriteLine("hi");
+            }
             if (!CanMove(newX, newY)) return;
             int player = curPlayer;
             
@@ -419,18 +424,19 @@ namespace QuoridorApp.ViewModels
                 if(realGame)
                 {
                     Application.Current.MainPage.DisplayAlert("Game ended", $"Player {player + 1} won!", "Back to home");
-                    OnToMainMenuCommand();
+                    //OnToMainMenuCommand();
                 }
                 return;
             }
             
             curPlayer++;
             curPlayer %= 2;
-            if (isBot[curPlayer] && depth == 1)
+            //if (isBot[curPlayer] && depth == 1)
+            if (isBot[curPlayer] && realGame)
             {
                 BotViewModel bot = new BotViewModel();
                 //bot.MakeMove(ref this, curPlayer, 1);
-                bot.MakeMove(this, curPlayer, depth, true);
+                bot.MakeMove(this, depth, true);
                 //.curPlayer++;
                 //.curPlayer %= 2;
             }
@@ -585,11 +591,12 @@ namespace QuoridorApp.ViewModels
             curPlayer = 1 - curPlayer;
             
             
-            if (isBot[curPlayer] && depth == 1)
+            //if (isBot[curPlayer] && depth == 1)
+            if(isBot[curPlayer] && realGame)
             {
                 BotViewModel bot = new BotViewModel();
                 //bot.MakeMove(ref , curPlayer, 1);
-                bot.MakeMove(this, curPlayer, depth, true);
+                bot.MakeMove(this, depth, true);
             }
         }
 
@@ -747,12 +754,13 @@ namespace QuoridorApp.ViewModels
 
             blocksLeft[curPlayer]--;
             curPlayer = 1 - curPlayer;
-            
-            if (isBot[curPlayer] && depth == 1)
+
+            //if (isBot[curPlayer] && depth == 1)
+            if (isBot[curPlayer] && realGame)
             {
                 BotViewModel bot = new BotViewModel();
                 //bot.MakeMove(ref , curPlayer, 1);
-                bot.MakeMove(this, curPlayer, depth, true);
+                bot.MakeMove(this, depth, true);
             }
             return;
         }
