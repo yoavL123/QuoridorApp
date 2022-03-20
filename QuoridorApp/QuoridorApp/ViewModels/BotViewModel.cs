@@ -113,6 +113,7 @@ namespace QuoridorApp.ViewModels
             if (lost(board, player)) return new double[] { -1, -1, -INF };
             int bestX = -1;
             int bestY = -1;
+            int cntBest = 0;
             double bestEval = -INF - 1;
             for(int i = 0; i < SIZE; i++)
             {
@@ -147,14 +148,16 @@ namespace QuoridorApp.ViewModels
                             bestX = i;
                             bestY = j;
                             bestEval = curEval;
+                            cntBest = 1;
                         }
                         else if (curEval == bestEval)
                         {
+                            cntBest++;
                             var rand = new Random();
 
                             // Generate and display 5 random byte (integer) values.
                             //var bytes = new byte[2];
-                            if (rand.Next()%2 == 0)
+                            if (rand.Next()%cntBest == 0)
                             {
                                 bestX = i;
                                 bestY = j;
@@ -178,6 +181,7 @@ namespace QuoridorApp.ViewModels
             int bestX = -1;
             int bestY = -1;
             double bestEval = -INF - 1;
+            int cntBest = 0;
             for (int i = 0; i < SIZE - 1; i++)
             {
                 for (int j = 0; j < SIZE - 1; j++)
@@ -224,14 +228,16 @@ namespace QuoridorApp.ViewModels
                         bestX = i;
                         bestY = j;
                         bestEval = curEval;
+                        cntBest = 1;
                     }
                     else if (curEval == bestEval)
                     {
+                        cntBest++;
                         var rand = new Random();
 
                         // Generate and display 5 random byte (integer) values.
                         //var bytes = new byte[2];
-                        if (rand.Next()%2 == 0)
+                        if (rand.Next()%cntBest == 0)
                         {
                             bestX = i;
                             bestY = j;
@@ -252,6 +258,7 @@ namespace QuoridorApp.ViewModels
             int bestX = -1;
             int bestY = -1;
             double bestEval = -INF - 1;
+            int cntBest = 0;
             //Application.Current.MainPage.DisplayAlert("MakeVerBlockMove:", "starting", "OK");
             for (int i = 0; i < SIZE - 1; i++)
             {
@@ -298,14 +305,16 @@ namespace QuoridorApp.ViewModels
                         bestX = i;
                         bestY = j;
                         bestEval = curEval;
+                        cntBest = 1;
                     }
                     else if(curEval == bestEval)
                     {
+                        cntBest++;
                         var rand = new Random();
 
                         // Generate and display 5 random byte (integer) values.
                         //var bytes = new byte[2];
-                        if(rand.Next()%2 == 0)
+                        if(rand.Next()%cntBest == 0)
                         {
                             bestX = i;
                             bestY = j;
