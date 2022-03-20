@@ -24,6 +24,12 @@ namespace QuoridorApp.Views
         {
             InitializeComponent();
             vm = new BoardViewModel(theBoard, false, true);
+            /*
+            vm.isBot[0] = true;
+            vm.isBot[1] = false;
+            BotViewModel bot = new BotViewModel();
+            bot.MakeMove(vm, 1, true);
+            */
             BindingContext = vm;
         }
     }
