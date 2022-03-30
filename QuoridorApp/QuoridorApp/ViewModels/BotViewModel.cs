@@ -10,7 +10,8 @@ namespace QuoridorApp.ViewModels
         const int SIZE = 9;
         const int INF = (int)1e9;
         const int MAX_DEPTH = 2;
-        
+
+        static int counter = 1;
 
         public BotViewModel()
         {
@@ -127,13 +128,13 @@ namespace QuoridorApp.ViewModels
                         //nBoard.Move(i, j, false);
                         int oldX = board.playerLoc[board.curPlayer, 0];
                         int oldY = board.playerLoc[board.curPlayer, 1];
-                        board.Move(i, j, false, depth);
+                        board.Move(i, j, depth);
                         //nBoard.Move(i, j, false, depth+1);
                         double curEval;
                         if(depth < MAX_DEPTH)
                         {
                             //board.curPlayer = 1 - board.curPlayer;
-                            curEval = -MakeMove(board, depth + 1, false);
+                            curEval = -MakeMove(board, depth + 1);
                             //board.curPlayer = 1 - board.curPlayer;
                         }
                         else
@@ -182,6 +183,8 @@ namespace QuoridorApp.ViewModels
             int bestY = -1;
             double bestEval = -INF - 1;
             int cntBest = 0;
+            int add = 0;
+            if (depth <= 1) add += 1;
             for (int i = 0; i < SIZE - 1; i++)
             {
                 for (int j = 0; j < SIZE - 1; j++)
@@ -203,7 +206,7 @@ namespace QuoridorApp.ViewModels
                     board.PlaceBlockHor(i + 1, j, depth+1);
                     
                     
-                    if (-evaluate(board, 1 - player) + DIF < bestEval && false)
+                    if ((-evaluate(board, 1 - player) + add < bestEval)&& false)
                     {
                         board.RemoveBlockHor(i, j);
                         continue;
@@ -214,7 +217,7 @@ namespace QuoridorApp.ViewModels
                     if (depth < MAX_DEPTH)
                     {
                         //board.curPlayer = 1 - board.curPlayer;
-                        curEval = -MakeMove(board, depth + 1, false);
+                        curEval = -MakeMove(board, depth + 1);
                         //board.curPlayer = 1 - board.curPlayer;
                     }
                     else
@@ -259,6 +262,8 @@ namespace QuoridorApp.ViewModels
             int bestY = -1;
             double bestEval = -INF - 1;
             int cntBest = 0;
+            int add = 0;
+            if (depth <= 1) add += 1;
             //Application.Current.MainPage.DisplayAlert("MakeVerBlockMove:", "starting", "OK");
             for (int i = 0; i < SIZE - 1; i++)
             {
@@ -278,7 +283,7 @@ namespace QuoridorApp.ViewModels
                     board.PlaceBlockVer(i, j+1, depth+1);
 
                     
-                    if (-evaluate(board, 1 - player) + DIF < bestEval && false)
+                    if ((-evaluate(board, 1 - player) + add < bestEval)&&false)
                     {
                         board.RemoveBlockVer(i, j);
                         continue;
@@ -292,7 +297,7 @@ namespace QuoridorApp.ViewModels
                     {
                         //Application.Current.MainPage.DisplayAlert("MakeVerBlockMove:", "making move" + depth, "OK");
                         //board.curPlayer = 1 - board.curPlayer;
-                        curEval = -MakeMove(board, depth + 1, false);
+                        curEval = -MakeMove(board, depth + 1);
                         //board.curPlayer = 1 - board.curPlayer;
                     }
                     else
@@ -340,8 +345,16 @@ namespace QuoridorApp.ViewModels
             return Math.Max(a, Math.Max(b, c));
         }
 
-        public double MakeMove(BoardViewModel board, int depth, bool realGame = false)
+        public double MakeMove(BoardViewModel board, int depth = 1)
         {
+            counter++;
+            /*
+            if(counter % 100 == 0)
+            {
+                Application.Current.MainPage.DisplayAlert("counter: " + counter, "OK", "OK");
+            }
+            */
+            Console.WriteLine("depth = something");
             int player = board.curPlayer;
             if (depth >= MAX_DEPTH)
             {
@@ -350,34 +363,30 @@ namespace QuoridorApp.ViewModels
                 return val;
             }
             //BoardViewModel nBoard = new BoardViewModel(board);
-            bool lastRealGame = board.realGame;
-            board.realGame = false;
             double[] pawnMoveRes = MakePawnMove(board, depth);
             //board.Move((int)pawnMoveRes[0], (int)pawnMoveRes[1], realGame);
             //return pawnMoveRes[2];
             
             double[] horBlockMoveRes = MakeHorBlockMove(board, depth);
             double[] verBlockMoveRes = MakeVerBlockMove(board, depth);
-            board.realGame = lastRealGame;
             //board.curPlayer = (board.curPlayer + 1) % 2;
             //double[] pawnMoveRes = MakePawnMove(ref board, player, depth);
             double maxV = max3(pawnMoveRes[2], horBlockMoveRes[2], verBlockMoveRes[2]);
-            if (board.realGame)
+            if(depth == 1)
             {
-                //Application.Current.MainPage.DisplayAlert("maxV:", $"maxV: {maxV}, vPawn: {pawnMoveRes[2]}, vHor: {horBlockMoveRes[2]}, vVer: {verBlockMoveRes[2]}", "Back to home");
+                //Application.Current.MainPage.DisplayAlert("counter: " + counter, "OK", "OK");
             }
-
             if (pawnMoveRes[2] == maxV)
             {
                 int oldX = board.playerLoc[board.curPlayer, 0];
                 int oldY = board.playerLoc[board.curPlayer, 1];
-                if (board.realGame)
+                if (depth == 1)
                 {
                     Console.WriteLine("hi");
                 }
-                board.Move((int)pawnMoveRes[0], (int)pawnMoveRes[1], realGame, depth);
+                board.Move((int)pawnMoveRes[0], (int)pawnMoveRes[1], depth);
                 
-                if(!board.realGame)
+                if(depth > 1)
                 {
                     board.MoveBack(oldX, oldY);
                 }
@@ -386,7 +395,7 @@ namespace QuoridorApp.ViewModels
             {
                 board.PlaceBlockHor((int)horBlockMoveRes[0], (int)horBlockMoveRes[1], depth);
                 board.PlaceBlockHor((int)horBlockMoveRes[0] + 1, (int)horBlockMoveRes[1], depth);
-                if(!board.realGame)
+                if(depth > 1)
                 {
                     board.RemoveBlockHor((int)horBlockMoveRes[0], (int)horBlockMoveRes[1]);
                 }
@@ -395,7 +404,7 @@ namespace QuoridorApp.ViewModels
             {
                 board.PlaceBlockVer((int)verBlockMoveRes[0], (int)verBlockMoveRes[1], depth);
                 board.PlaceBlockVer((int)verBlockMoveRes[0], (int)verBlockMoveRes[1] + 1, depth);
-                if (!board.realGame)
+                if (depth > 1)
                 {
                     board.RemoveBlockVer((int)verBlockMoveRes[0], (int)verBlockMoveRes[1]);
                 }

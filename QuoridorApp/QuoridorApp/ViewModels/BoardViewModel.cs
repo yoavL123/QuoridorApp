@@ -33,12 +33,11 @@ namespace QuoridorApp.ViewModels
         2 - second player
         */
         //public PawnTile[,] pawnBoard = new PawnTile[SIZE, SIZE];
-        public bool realGame;
         public PawnTile[,] pawnBoard;
 
         public BlockTile[,] horBlockBoard; // horizontal block board
         public BlockTile[,] verBlockBoard; // horizontal block board
-        public bool[,] centerBlocked; // checks weather the center is blocked. Used to check if we can put a block
+        //public bool[,] centerBlocked; // checks weather the center is blocked. Used to check if we can put a block
         public CenterTile[,] centerTile;
 
         public static Color[] blockTileColStatus = new Color[] { Color.DarkRed, Color.BurlyWood, Color.BurlyWood };
@@ -57,15 +56,6 @@ namespace QuoridorApp.ViewModels
             set
             {
                 curPlayerP = value;
-                /*
-                if(isBot[curPlayerP])
-                {
-                    BotViewModel bot = new BotViewModel();
-                    bot.MakeMove(this, curPlayer, 1);
-                    
-                }
-                */
-                
             }
         }
         public string blockStatus; // has 3 values: {"Empty", "Hor", "Ver"}
@@ -89,50 +79,13 @@ namespace QuoridorApp.ViewModels
                 for (int j = 0; j < cols; j++)
                     a[i, j] = b[i, j];
         }
-
-        /*
-        private static void Copy2DComplex<T>(ref T[,] a, T[,] b)
-        {
-            var rows = b.GetLength(0);
-            var cols = b.GetLength(1);
-            a = new T[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    a[i, j] = new T(b[i, j]);
-        }
-        */
-        /*
-        Checks if some player has to move
-         */
-        /*
-        public static void HandleGame(BoardViewModel board)
-        {
-            while (!board.CheckWon())
-            {
-                if (board.isBot[board.curPlayer])
-                {
-                    BotViewModel bot = new BotViewModel();
-                    bot.MakeMove(board, board.curPlayer, 1);
-                }
-            }
-        }
-        */
-
-        public BoardViewModel(BoardViewModel b, bool isReal = true)
+        public BoardViewModel(BoardViewModel b, int depth = 1)
         {
             pawnBoard = new PawnTile[SIZE, SIZE];
             horBlockBoard = new BlockTile[SIZE, SIZE - 1];
             verBlockBoard = new BlockTile[SIZE - 1, SIZE];
             centerTile = new CenterTile[SIZE - 1, SIZE - 1];
-            Copy2D(ref centerBlocked, b.centerBlocked);
-            /*
-            Copy2D(ref pawnBoard, b.pawnBoard);
-            Copy2D(ref horBlockBoard, b.horBlockBoard);
-            Copy2D(ref verBlockBoard, b.verBlockBoard);
-            
-            Copy2D(ref centerTile, b.centerTile);
-            */
+            //Copy2D(ref centerBlocked, b.centerBlocked);
             var rows = b.pawnBoard.GetLength(0);
             var cols = b.pawnBoard.GetLength(1);
             
@@ -160,30 +113,30 @@ namespace QuoridorApp.ViewModels
             Copy1D(ref isBot, b.isBot);
             curPlayer = b.curPlayer;
             blockStatus = b.blockStatus;
-            realGame = b.realGame && isReal;
+            
             
         }
-        public BoardViewModel(AbsoluteLayout theBoard, bool isBot0 = false, bool isBot1 = false, bool isRealGame = true)
+        public BoardViewModel(AbsoluteLayout theBoard, bool isBot0 = false, bool isBot1 = false)
         {
             isBot = new bool[2]{ isBot0, isBot1};
             pawnBoard = new PawnTile[SIZE, SIZE];
             horBlockBoard = new BlockTile[SIZE, SIZE - 1];
             verBlockBoard = new BlockTile[SIZE - 1, SIZE];
-            centerBlocked = new bool[SIZE, SIZE];
+            //centerBlocked = new bool[SIZE, SIZE];
             centerTile = new CenterTile[SIZE - 1, SIZE - 1];
             blocksLeft = new int[2] { BLOCKS_NUM, BLOCKS_NUM };
             for (int i = 0; i < SIZE; i++)
             {
                 for(int j = 0; j < SIZE; j++)
                 {
-                    centerBlocked[i, j] = false;
+                    //centerBlocked[i, j] = false;
                     int ri = i, rj = j;
                     pawnBoard[i, j] = new PawnTile(i, j) // Create the button add its properties:
                     {
                         //BackgroundColor = Color.Black,
                         //BackgroundColor = BoardViewModel.pawnTileColStatus[vm.pawnBoard[i, j]],
                         //Command = new Command(() => Move(0, i, j, this))
-                        Command = new Command(() => this.Move(ri, rj, realGame))
+                        Command = new Command(() => this.Move(ri, rj))
                     };
                     double startX = i * PAWN_TILE_SIZE + i * BLOCK_TILE_SMALL;
                     double startY = j * PAWN_TILE_SIZE + j * BLOCK_TILE_SMALL;
@@ -242,7 +195,6 @@ namespace QuoridorApp.ViewModels
             pawnBoard[SIZE / 2, SIZE-1].PawnTileStatus = PawnTile.DicPawnStatus["Player2"];
             playerLoc = new int[,] { { SIZE / 2, 0 }, { SIZE / 2, SIZE - 1 } };
             curPlayer = 0; // this is the current player's turn
-            this.realGame = isRealGame;
             //HandleGame(this);
         }
         public async void OnToMainMenuCommand()
@@ -346,20 +298,6 @@ namespace QuoridorApp.ViewModels
                     return false;
                 }
                 return true;
-                /*
-                if (Math.Abs(playerLoc[player, 0] - playerLoc[nextPlayer, 0]) + Math.Abs(playerLoc[player, 1] - playerLoc[nextPlayer, 1]) != 1)
-                {
-                    return false;
-                }
-                
-                if (Math.Abs(playerLoc[nextPlayer, 0] - newX) + Math.Abs(playerLoc[nextPlayer, 1] - newY) != 1)
-                {
-                    return false;
-                }
-                
-                curX = playerLoc[nextPlayer, 0];
-                curY = playerLoc[nextPlayer, 1];
-                */
             }
 
             if (curX == newX)
@@ -379,7 +317,7 @@ namespace QuoridorApp.ViewModels
             if (pawnBoard[newX, newY].PawnTileStatus != PawnTile.DicPawnStatus["Empty"]) return false;
             return true;
         }
-        public void MoveBack(int oldX, int oldY, bool realGame = true)
+        public void MoveBack(int oldX, int oldY)
         {
             
             curPlayer = 1 - curPlayer;
@@ -392,9 +330,9 @@ namespace QuoridorApp.ViewModels
         /*
          * realGame - is it a real game or a simulated one
          */
-        public void Move(int newX, int newY, bool realGame = true, int depth = 1)
+        public void Move(int newX, int newY, int depth = 1)
         {
-            if(realGame)
+            if(depth == 1)
             {
                 Console.WriteLine("hi");
             }
@@ -409,11 +347,7 @@ namespace QuoridorApp.ViewModels
                 curX = playerLoc[nextPlayer, 0];
                 curY = playerLoc[nextPlayer, 1];
             }
-            
-            
-            
-            //Console.WriteLine(playerLoc[player, 0]);
-            //Console.WriteLine(pawnBoard[playerLoc[player, 0], playerLoc[player, 1]].PawnTileStatus);
+
             pawnBoard[playerLoc[player, 0], playerLoc[player, 1]].PawnTileStatus = PawnTile.DicPawnStatus["Empty"];
             playerLoc[player, 0] = newX;
             playerLoc[player, 1] = newY;
@@ -421,7 +355,7 @@ namespace QuoridorApp.ViewModels
 
             if (CheckWon())
             {
-                if(realGame)
+                if(depth == 1)
                 {
                     Application.Current.MainPage.DisplayAlert("Game ended", $"Player {player + 1} won!", "Back to home");
                     //OnToMainMenuCommand();
@@ -432,11 +366,13 @@ namespace QuoridorApp.ViewModels
             curPlayer++;
             curPlayer %= 2;
             //if (isBot[curPlayer] && depth == 1)
-            if (isBot[curPlayer] && realGame)
+            if (isBot[curPlayer] && depth == 1)
             {
                 BotViewModel bot = new BotViewModel();
                 //bot.MakeMove(ref this, curPlayer, 1);
-                bot.MakeMove(this, depth, true);
+                bot.MakeMove(this, depth);
+                //BoardViewModel cloneBoard = new BoardViewModel(this);
+                //bot.MakeMove(ref cloneBoard, depth);
                 //.curPlayer++;
                 //.curPlayer %= 2;
             }
@@ -484,11 +420,11 @@ namespace QuoridorApp.ViewModels
             }
 
             if (!hasNextTo) return false;
-            if (centerBlocked[Math.Min(X, nextX), Y])
+            if (centerTile[Math.Min(X, nextX), Y].CenterTileStatus)
             {
                 return false;
             }
-            centerBlocked[Math.Min(X, nextX), Y] = true;
+            //centerBlocked[Math.Min(X, nextX), Y] = true;
             centerTile[Math.Min(X, nextX), Y].fill();
 
             blockStatus = "Empty";
@@ -514,7 +450,7 @@ namespace QuoridorApp.ViewModels
             horBlockBoard[X, Y].BlockTileStatus = stateXY;
             horBlockBoard[nextX, nextY].BlockTileStatus = statenextXY;
             centerTile[Math.Min(X, nextX), Y].clear();
-            centerBlocked[Math.Min(X, nextX), Y] = false;
+            //centerBlocked[Math.Min(X, nextX), Y] = false;
             return ans;
         }
 
@@ -533,7 +469,7 @@ namespace QuoridorApp.ViewModels
         public void RemoveBlockHor(int X, int Y)
         {
             curPlayer = 1 - curPlayer;
-            centerBlocked[X, Y] = false;
+            //centerBlocked[X, Y] = false;
             centerTile[X, Y].clear();
 
             horBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
@@ -584,7 +520,7 @@ namespace QuoridorApp.ViewModels
 
             
             
-            centerBlocked[Math.Min(X, nextX), Y] = true;
+            //centerBlocked[Math.Min(X, nextX), Y] = true;
             centerTile[Math.Min(X, nextX), Y].fill();
             
             blockStatus = "Empty";
@@ -596,11 +532,13 @@ namespace QuoridorApp.ViewModels
             
             
             //if (isBot[curPlayer] && depth == 1)
-            if(isBot[curPlayer] && realGame)
+            if(isBot[curPlayer] && depth == 1)
             {
                 BotViewModel bot = new BotViewModel();
                 //bot.MakeMove(ref , curPlayer, 1);
-                bot.MakeMove(this, depth, true);
+                bot.MakeMove(this, depth);
+                //BoardViewModel cloneBoard = new BoardViewModel(this);
+                //bot.MakeMove(ref cloneBoard, depth);
             }
         }
 
@@ -619,7 +557,7 @@ namespace QuoridorApp.ViewModels
         public void RemoveBlockVer(int X, int Y)
         {
             curPlayer = 1 - curPlayer;
-            centerBlocked[X, Y] = false;
+            //centerBlocked[X, Y] = false;
             centerTile[X, Y].clear();
             /*
             if(verBlockBoard[X, Y].BlockTileStatus != curPlayer)
@@ -671,11 +609,11 @@ namespace QuoridorApp.ViewModels
             }
 
             if (!hasNextTo) return false;
-            if (centerBlocked[X, Math.Min(Y, nextY)])
+            if (centerTile[X, Math.Min(Y, nextY)].CenterTileStatus)
             {
                 return false;
             }
-            centerBlocked[X, Math.Min(Y, nextY)] = true;
+            //centerBlocked[X, Math.Min(Y, nextY)] = true;
             centerTile[X, Math.Min(Y, nextY)].fill();
             blockStatus = "Empty";
             verBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
@@ -698,7 +636,7 @@ namespace QuoridorApp.ViewModels
             verBlockBoard[X, Y].BlockTileStatus = BlockTile.DicBlockStatus["Empty"];
             verBlockBoard[nextX, nextY].BlockTileStatus = BlockTile.DicBlockStatus["Pending"];
             centerTile[X, Math.Min(Y, nextY)].clear();
-            centerBlocked[X, Math.Min(Y, nextY)] = false;
+            //centerBlocked[X, Math.Min(Y, nextY)] = false;
             return ans;
         }
 
@@ -753,7 +691,7 @@ namespace QuoridorApp.ViewModels
             }
 
             
-            centerBlocked[X, Math.Min(Y, nextY)] = true;
+            //centerBlocked[X, Math.Min(Y, nextY)] = true;
             centerTile[X, Math.Min(Y, nextY)].fill();
             blockStatus = "Empty";
             verBlockBoard[X, Y].BlockTileStatus = curPlayer + 1;
@@ -763,11 +701,12 @@ namespace QuoridorApp.ViewModels
             curPlayer = 1 - curPlayer;
 
             //if (isBot[curPlayer] && depth == 1)
-            if (isBot[curPlayer] && realGame)
+            if (isBot[curPlayer] && depth == 1)
             {
                 BotViewModel bot = new BotViewModel();
-                //bot.MakeMove(ref , curPlayer, 1);
-                bot.MakeMove(this, depth, true);
+                bot.MakeMove(this, 1);
+                //BoardViewModel cloneBoard = new BoardViewModel(this);
+                //bot.MakeMove(ref cloneBoard, depth);
             }
             return;
         }

@@ -12,14 +12,20 @@
                 <Setter Property="TextColor" Value="Brown">
                 </Setter>
             </Style>
-            <Style x:Key="PageStyle" TargetType="Page">
-                <Setter Property="BackgroundColor" Value="Black"/>
+            <Style x:Key="pageStyle" TargetType="Page">
+                <Setter Property="BackgroundColor" Value="DarkSlateGray"/>
             </Style>
-            <Style x:Key="StandardLabelStyle" TargetType="Label">
-                <Setter Property="TextColor" Value="AliceBlue"/>
+            <Style x:Key="labelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="MediumSeaGreen"/>
                 <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="FontSize" Value="Large"/>
             </Style>
-            
+            <Style x:Key="buttonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="BurlyWood"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="BackgroundColor" Value="DarkRed"/>
+            </Style>
+
         </ResourceDictionary>
 
     </Application.Resources>
