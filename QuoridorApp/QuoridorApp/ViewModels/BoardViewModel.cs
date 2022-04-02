@@ -353,16 +353,18 @@ namespace QuoridorApp.ViewModels
             playerLoc[player, 1] = newY;
             pawnBoard[playerLoc[player, 0], playerLoc[player, 1]].PawnTileStatus = player+1;
 
+            
             if (CheckWon())
             {
-                if(depth == 1)
+                if(depth == 1 && !isBot[curPlayer])
                 {
-                    Application.Current.MainPage.DisplayAlert("Game ended", $"Player {player + 1} won!", "Back to home");
-                    //OnToMainMenuCommand();
+                    if (!isBot[1 - curPlayer]) curPlayer = 1 - curPlayer;
+                    Application.Current.MainPage.DisplayAlert("Game ended", $"Player {1-curPlayer + 1} won!", "Back to home");
+                    OnToMainMenuCommand();
                 }
                 return;
             }
-            
+
             curPlayer++;
             curPlayer %= 2;
             //if (isBot[curPlayer] && depth == 1)
@@ -376,7 +378,8 @@ namespace QuoridorApp.ViewModels
                 //.curPlayer++;
                 //.curPlayer %= 2;
             }
-
+            
+            //Application.Current.MainPage.DisplayAlert("PlayerLoc", $"playerLoc[0,0] = {playerLoc[0, 0]}, playerLoc[0,0] = {playerLoc[0, 1]}", "Back to home");
         }
         /*
         Returns true iff a new block is placed.

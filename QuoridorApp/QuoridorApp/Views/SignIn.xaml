@@ -3,7 +3,8 @@
              xmlns:local="clr-namespace:QuoridorApp.ViewModels"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuoridorApp.Views.SignIn"
-             Style="{DynamicResource pageStyle}">
+             Style="{DynamicResource pageStyle}"
+             >
     <!-- Binding to "SignInViewModel" -->
     <ContentPage.BindingContext>
         <local:SignInViewModel></local:SignInViewModel>

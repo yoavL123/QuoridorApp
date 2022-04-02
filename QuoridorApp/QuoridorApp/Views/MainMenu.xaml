@@ -2,25 +2,29 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:local="clr-namespace:QuoridorApp.ViewModels"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="QuoridorApp.Views.MainMenu">
+             x:Class="QuoridorApp.Views.MainMenu"
+             Style="{DynamicResource pageStyle}">
     <!-- Binding to "MainMenuViewModel" -->
     <ContentPage.BindingContext>
         <local:MainMenuViewModel></local:MainMenuViewModel>
     </ContentPage.BindingContext>
     <ContentPage.Content>
+        
         <StackLayout>
-            <Label Text="Main Menu"
+            
+            <Label Text="Main Menu" Style="{StaticResource labelStyle}"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
 
             <Label Text="{Binding UserName, StringFormat='Welcome {0}!'}"
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="CenterAndExpand" />
-            <Button Text="Go To Board!" Command="{Binding ToBoardCommand}" />
-            <Button Text="Go To Board Bot!" Command="{Binding ToBoardBotCommand}" />
-            <Button Text="Log out!" Command="{Binding SubmitSignOutCommand}" />
+            <Button Text="Go To Board!" Style="{DynamicResource buttonStyle}" Command="{Binding ToBoardCommand}" />
+            <Button Text="Go To Board Bot!" Style="{DynamicResource buttonStyle}" Command="{Binding ToBoardBotCommand}" />
+            <Button Text="Log out!" Style="{DynamicResource buttonStyle}" Command="{Binding SubmitSignOutCommand}" />
 
             
         </StackLayout>
+        
     </ContentPage.Content>
 </ContentPage>
