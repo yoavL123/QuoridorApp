@@ -21,9 +21,18 @@
                 <Setter Property="HorizontalOptions" Value="Center"/>
                 <Setter Property="FontSize" Value="Large"/>
             </Style>
+            <Style x:Key="titleLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="Large"/>
+                <Setter Property="TextColor" Value="DarkOliveGreen"/>
+                <Setter Property="BackgroundColor" Value="Chocolate"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <!--<Setter Property="HorizontalOptions" Value="Center"/> -->
+
+            </Style>
             <Style x:Key="buttonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="BurlyWood"/>
                 <Setter Property="FontSize" Value="Medium"/>
+                <!--<Setter Property="BackgroundColor" Value="DarkRed"/>-->
                 <Setter Property="BackgroundColor" Value="DarkRed"/>
             </Style>
 

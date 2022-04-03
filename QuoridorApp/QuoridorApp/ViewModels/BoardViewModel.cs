@@ -85,7 +85,6 @@ namespace QuoridorApp.ViewModels
             horBlockBoard = new BlockTile[SIZE, SIZE - 1];
             verBlockBoard = new BlockTile[SIZE - 1, SIZE];
             centerTile = new CenterTile[SIZE - 1, SIZE - 1];
-            //Copy2D(ref centerBlocked, b.centerBlocked);
             var rows = b.pawnBoard.GetLength(0);
             var cols = b.pawnBoard.GetLength(1);
             
@@ -113,8 +112,6 @@ namespace QuoridorApp.ViewModels
             Copy1D(ref isBot, b.isBot);
             curPlayer = b.curPlayer;
             blockStatus = b.blockStatus;
-            
-            
         }
         public BoardViewModel(AbsoluteLayout theBoard, bool isBot0 = false, bool isBot1 = false)
         {
@@ -356,9 +353,10 @@ namespace QuoridorApp.ViewModels
             
             if (CheckWon())
             {
-                if(depth == 1 && !isBot[curPlayer])
+                if(depth == 1 && (!isBot[curPlayer]))
+                //if(depth == 1)
                 {
-                    if (!isBot[1 - curPlayer]) curPlayer = 1 - curPlayer;
+                    if (!isBot[1 - curPlayer] || true) curPlayer = 1 - curPlayer;
                     Application.Current.MainPage.DisplayAlert("Game ended", $"Player {1-curPlayer + 1} won!", "Back to home");
                     OnToMainMenuCommand();
                 }

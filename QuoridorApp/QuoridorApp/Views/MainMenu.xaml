@@ -18,10 +18,12 @@
 
             <Label Text="{Binding UserName, StringFormat='Welcome {0}!'}"
                 VerticalOptions="CenterAndExpand"
-                HorizontalOptions="CenterAndExpand" />
-            <Button Text="Go To Board!" Style="{DynamicResource buttonStyle}" Command="{Binding ToBoardCommand}" />
-            <Button Text="Go To Board Bot!" Style="{DynamicResource buttonStyle}" Command="{Binding ToBoardBotCommand}" />
-            <Button Text="Log out!" Style="{DynamicResource buttonStyle}" Command="{Binding SubmitSignOutCommand}" />
+                HorizontalOptions="CenterAndExpand"
+                   Style="{DynamicResource labelStyle}"/>
+            <Button Text="Go To Board" Style="{DynamicResource buttonStyle}" Command="{Binding ToBoardCommand}" />
+            <Button Text="Go To Board Bot" Style="{DynamicResource buttonStyle}" Command="{Binding ToBoardBotCommand}" />
+            <Button Text="Go To Profile Page" Style="{DynamicResource buttonStyle}" Command="{Binding ToProfileCommand}" />
+            <Button Text="Log out" Style="{DynamicResource buttonStyle}" Command="{Binding SubmitSignOutCommand}" />
 
             
         </StackLayout>

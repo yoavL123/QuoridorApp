@@ -10,22 +10,14 @@
         <local:StartPageViewModel></local:StartPageViewModel>
     </ContentPage.BindingContext>
     <ContentPage.Resources>
-        <Style x:Key="TitleLabel" TargetType="Label">
-            <Setter Property="FontSize" Value="Large"/>
-            <Setter Property="TextColor" Value="Chocolate"/>
-            <Setter Property="BackgroundColor" Value="Firebrick"/>
-            <Setter Property="HorizontalTextAlignment" Value="Center"/>
-            <!--<Setter Property="HorizontalOptions" Value="Center"/> -->
-
-        </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
         
         <StackLayout>
-            <Label Text="Quoridor" Style="{StaticResource TitleLabel}" />
+            <Label Text="Quoridor" Style="{StaticResource titleLabelStyle}" />
             <!--<Label Text="Quoridor"  Style="{StaticResource StandardLabelStyle}"/> -->
-            <Button Text="Sign In" Command="{Binding ToSignInCommand}"/>
-            <Button Text="Sign Up" Command="{Binding ToSignUpCommand}" />
+            <Button Text="Sign In" Command="{Binding ToSignInCommand}" Style="{DynamicResource buttonStyle}"/>
+            <Button Text="Sign Up" Command="{Binding ToSignUpCommand}" Style="{DynamicResource buttonStyle}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

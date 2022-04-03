@@ -25,7 +25,7 @@
     <ContentPage.Content>
         <StackLayout Style="{StaticResource SignUpStack}">
             <Button Text="Back to main page" Command="{Binding ToStartPageCommand}" />
-            <Label Text="Sign Up"
+            <Label Text="Sign Up" Style="{DynamicResource titleLabelStyle}"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
             <Frame>
@@ -37,7 +37,7 @@
                     <Entry x:Name="PlayerPass" Text="{Binding PlayerPass}" Placeholder="Enter password..." />
                 </StackLayout>
             </Frame>
-            <Button Command="{Binding SubmitSignUpCommand}" Text="Sign Up!" Style="{StaticResource SignUpButton}" />
+            <Button Command="{Binding SubmitSignUpCommand}" Text="Sign Up!" Style="{DynamicResource buttonStyle}" />
         </StackLayout>
         
         

@@ -44,7 +44,15 @@ namespace QuoridorApp.ViewModels
         {
             Page p = new Views.BoardBot();
             await App.Current.MainPage.Navigation.PushAsync(p);
+        }
+        #endregion
 
+        #region Go To Profile
+        public ICommand ToProfileCommand => new Command(OnToProfileCommand);
+        public async void OnToProfileCommand()
+        {
+            Page p = new Views.Profile();
+            await App.Current.MainPage.Navigation.PushAsync(p);
         }
         #endregion
     }
