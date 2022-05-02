@@ -15,11 +15,14 @@ namespace QuoridorApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Profile : ContentPage
     {
+
+        
         public Profile()
         {
-            ProfileViewModel vm = new ProfileViewModel();
-            BindingContext = vm;
             InitializeComponent();
+            ProfileViewModel vm = new ProfileViewModel(theGraph);
+            BindingContext = vm;
+            
         }
     }
 }

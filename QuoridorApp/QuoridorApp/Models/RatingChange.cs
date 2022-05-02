@@ -12,5 +12,10 @@ namespace QuoridorApp.Models
         public int AlteredRating { get; set; }
 
         public virtual Player RatingChangePlayer { get; set; }
+
+        public int CalcRatingChange()
+        {
+            return 10;
+        }
     }
 }
