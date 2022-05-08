@@ -11,11 +11,21 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Profile" Style="{DynamicResource titleLabelStyle}"/>
+            <Label Text="{Binding UserName, StringFormat='Handle: {0}'}"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand"
+                   Style="{DynamicResource labelStyle}"/>
+            <!--
+            <Label Text="{Binding , StringFormat='Level: {0}'}"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand"
+                   Style="{DynamicResource labelStyle}"/>
+            -->
+            <AbsoluteLayout BackgroundColor="DarkRed" x:Name="theGraph" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            </AbsoluteLayout>
             <Button Text="To Rating History" Command="{Binding ToRatingHistoryCommand}" Style="{DynamicResource buttonStyle}" />
             <Button Text="Back To Main Menu" Command="{Binding ToMainMenuCommand}" Style="{DynamicResource buttonStyle}" />
 
-            <AbsoluteLayout BackgroundColor="DarkRed" x:Name="theGraph" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-            </AbsoluteLayout>
         </StackLayout>
         
     </ContentPage.Content>

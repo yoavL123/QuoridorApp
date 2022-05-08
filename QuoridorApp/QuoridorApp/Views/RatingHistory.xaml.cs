@@ -1,4 +1,5 @@
 ﻿using QuoridorApp.ViewModels;
+using QuoridorApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using QuoridorApp.Models;
 
 namespace QuoridorApp.Views
 {
@@ -18,7 +20,12 @@ namespace QuoridorApp.Views
             InitializeComponent();
             RatingHistoryViewModel vm = new RatingHistoryViewModel();
             BindingContext = vm;
-            
+        }
+
+
+       void make()
+        {
+            TableView table = new TableView();
         }
     }
 }

@@ -195,7 +195,9 @@ namespace QuoridorApp.Services
                         ReferenceHandler = ReferenceHandler.Preserve, //avoid reference loops!
                         PropertyNameCaseInsensitive = true
                     };
+                   
                     string content = await response.Content.ReadAsStringAsync();
+                    if (string.IsNullOrEmpty(content)) return null;
                     RatingChange r = JsonSerializer.Deserialize<RatingChange>(content, options);
                     return r;
                 }

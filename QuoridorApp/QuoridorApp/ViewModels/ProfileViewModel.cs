@@ -4,7 +4,8 @@ using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 using QuoridorApp.Views;
-
+using QuoridorApp.Services;
+using QuoridorApp.Models;
 
 namespace QuoridorApp.ViewModels
 {
@@ -29,6 +30,17 @@ namespace QuoridorApp.ViewModels
         }
 
 
+        /*
+        public ICommand showRatingCommand => new Command(OnShowRatingCommand(Label l));
+
+        public async void OnShowRatingCommand(Label l)
+        {
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            
+            RatingChange r = await proxy.GetLastRatingChange(CurrentApp.CurrentPlayer);
+            l.Text = r.ToString();
+        }
+        */
 
 
         public ICommand ToMainMenuCommand => new Command(OnToMainMenuCommand);

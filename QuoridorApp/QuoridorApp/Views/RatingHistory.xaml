@@ -6,11 +6,30 @@
              Style="{DynamicResource pageStyle}">
 
     <ContentPage.BindingContext>
-        <local:ProfileViewModel></local:ProfileViewModel>
+        <local:RatingHistoryViewModel />
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Rating Hisroty" Style="{DynamicResource titleLabelStyle}"/>
+            <CollectionView ItemsSource="{Binding RatingData}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*, *">
+                            <Label Grid.Column="0"
+                                Text="{Binding RatingChangeDate, StringFormat='Date is: {0}'}"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                Text="{Binding AlteredRating, StringFormat='New rating is: {0}'}"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="Donwloading"/>
+                </CollectionView.EmptyView>
+            </CollectionView>
             <Button Text="Back To Profile Page" Command="{Binding ToProfileCommand}" Style="{DynamicResource buttonStyle}" />
 
             

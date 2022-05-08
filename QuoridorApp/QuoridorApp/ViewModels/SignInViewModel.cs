@@ -24,6 +24,17 @@ namespace QuoridorApp.ViewModels
         }
         #endregion
 
+
+        private int userRating;
+        public int UserRating
+        {
+            get { return userRating; }
+            set
+            {
+                userRating = value;
+                OnPropertyChanged("UserRating");
+            }
+        }
         #region PlayerPass
         private string playerPass;
         public string PlayerPass
