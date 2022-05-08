@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:local="clr-namespace:QuoridorApp.ViewModels"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuoridorApp.Views.RatingHistory"
+             Style="{DynamicResource pageStyle}">
+
+    <ContentPage.BindingContext>
+        <local:ProfileViewModel></local:ProfileViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Rating Hisroty" Style="{DynamicResource titleLabelStyle}"/>
+            <Button Text="Back To Profile Page" Command="{Binding ToProfileCommand}" Style="{DynamicResource buttonStyle}" />
+
+            
+        </StackLayout>
+
+    </ContentPage.Content>
+</ContentPage>

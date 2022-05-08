@@ -93,46 +93,7 @@ namespace QuoridorApp.Services
         public string LastName { get; set; }
         public string PlayerPass { get; set; }
 
-        /*
-        Sign Up
-        */
-        /*
-        public async Task<Player> SignUpAsync(string email, string userName, string firstName, string lastName, string playerPass)
-        {
-            
-            try
-            {
-                //HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/signUp?Email={email}" +
-                //$"&userName={userName}&firstName={firstName}&lsatName={lastName}&playerPass={playerPass}");
-                
-                if (response.IsSuccessStatusCode)
-                {
-                    JsonSerializerOptions options = new JsonSerializerOptions 
-                    {
-                        ReferenceHandler = ReferenceHandler.Preserve, //avoid reference loops!
-                        PropertyNameCaseInsensitive = true
-                    };
-                    string content = await response.Content.ReadAsStringAsync();
-                    Player u = JsonSerializer.Deserialize<Player>(content, options);
-                    return u;
-                }
-                else
-                {
-                    return null;
-                }
-                
-                //HttpResponseMessage response = await this.client.PostAsync($"{this.baseUri}/signUp?Email={email}" +
-                    //$"&userName={userName}&firstName={firstName}&lsatName={lastName}&playerPass={playerPass}");
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
-            
-        }
-        */
+        
 
         public async Task<Player> SignUpPlayer(Player player)
         {
@@ -168,7 +129,7 @@ namespace QuoridorApp.Services
         }
 
 
-
+        
         public async Task<Player> SignInAsync(string userName, string pass)
         {
             try
@@ -193,6 +154,90 @@ namespace QuoridorApp.Services
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+
+        public async void UpdateRatingChange(RatingChange ratingChange)
+        {
+            try
+            {
+                JsonSerializerOptions options = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.Preserve, //avoid reference loops!
+                    PropertyNameCaseInsensitive = true
+                };
+
+                string jsonObject = JsonSerializer.Serialize<RatingChange>(ratingChange, options);
+                StringContent content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await this.client.PostAsync($"{this.baseUri}/UpdateRatingChange", content);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new SystemException("Cannot update rating change");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public async Task<RatingChange> GetLastRatingChange(Player p)
+        {
+            try
+            {
+                HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/GetLastRatingChange?playerId={p.PlayerId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    JsonSerializerOptions options = new JsonSerializerOptions
+                    {
+                        ReferenceHandler = ReferenceHandler.Preserve, //avoid reference loops!
+                        PropertyNameCaseInsensitive = true
+                    };
+                    string content = await response.Content.ReadAsStringAsync();
+                    RatingChange r = JsonSerializer.Deserialize<RatingChange>(content, options);
+                    return r;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                await Application.Current.MainPage.DisplayAlert($"Error: {e.Message}", "ok", "ok2");
+                return null;
+            }
+        }
+
+
+        public async Task<List<RatingChange>> GetRatingChanges(Player p)
+        {
+            try
+            {
+                HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/GetRatingChanges?playerId={p.PlayerId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    JsonSerializerOptions options = new JsonSerializerOptions
+                    {
+                        ReferenceHandler = ReferenceHandler.Preserve, //avoid reference loops!
+                        PropertyNameCaseInsensitive = true
+                    };
+                    string content = await response.Content.ReadAsStringAsync();
+                    List<RatingChange> r = JsonSerializer.Deserialize<List<RatingChange>>(content, options);
+                    return r;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                await Application.Current.MainPage.DisplayAlert($"Error: {e.Message}", "ok", "ok2");
                 return null;
             }
         }

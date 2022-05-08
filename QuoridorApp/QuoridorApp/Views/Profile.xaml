@@ -11,6 +11,7 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Profile" Style="{DynamicResource titleLabelStyle}"/>
+            <Button Text="To Rating History" Command="{Binding ToRatingHistoryCommand}" Style="{DynamicResource buttonStyle}" />
             <Button Text="Back To Main Menu" Command="{Binding ToMainMenuCommand}" Style="{DynamicResource buttonStyle}" />
 
             <AbsoluteLayout BackgroundColor="DarkRed" x:Name="theGraph" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">

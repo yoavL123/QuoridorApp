@@ -17,6 +17,20 @@ namespace QuoridorApp.ViewModels
         {
             RatingGraph ratingGraph = new RatingGraph(theGraph);
         }
+
+        public ICommand ToRatingHistoryCommand => new Command(OnToRatingHistoryCommand);
+
+        public async void OnToRatingHistoryCommand()
+        {
+            Page p = new Views.RatingHistory();
+            await App.Current.MainPage.Navigation.PushAsync(p);
+
+
+        }
+
+
+
+
         public ICommand ToMainMenuCommand => new Command(OnToMainMenuCommand);
 
         public async void OnToMainMenuCommand()

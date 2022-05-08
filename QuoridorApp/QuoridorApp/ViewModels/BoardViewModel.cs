@@ -1,4 +1,5 @@
 ﻿using QuoridorApp.Models;
+using QuoridorApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -321,10 +322,18 @@ namespace QuoridorApp.ViewModels
             pawnBoard[playerLoc[curPlayer, 0], playerLoc[curPlayer, 1]].PawnTileStatus = curPlayer + 1;
             
         }
-        void FinishGame()
+        async void FinishGame()
         {
             if (!isBot[1 - curPlayer] && !isBot[curPlayer]) curPlayer = 1 - curPlayer; // FIXXXXXX
-            Application.Current.MainPage.DisplayAlert("Game ended", $"Player {1 - curPlayer + 1} won!", "Back to home");
+            await Application.Current.MainPage.DisplayAlert("Game ended", $"Player {1 - curPlayer + 1} won!", "Back to home");
+
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            RatingChange lastRating = await proxy.GetLastRatingChange(CurrentApp.CurrentPlayer);
+            int newRating = (lastRating != null) ? lastRating.AlteredRating : RatingChange.INITIAL_RATING; // FIXXXX
+            newRating += 10;
+            await Application.Current.MainPage.DisplayAlert($"New Rating: {newRating}", $"ok!", "ok!");
+            RatingChange ratingChange = new RatingChange(CurrentApp.CurrentPlayer, newRating);
+            proxy.UpdateRatingChange(ratingChange);
             OnToMainMenuCommand();
         }
         /*
