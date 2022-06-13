@@ -9,7 +9,7 @@ namespace QuoridorApp.ViewModels
     {
         const int SIZE = 9;
         const int INF = (int)1e9;
-        const int MAX_DEPTH = 2;
+        const int MAX_DEPTH = 3;
 
         static int counter = 1;
 
@@ -259,24 +259,19 @@ namespace QuoridorApp.ViewModels
         public double[] MakeVerBlockMove(BoardViewModel board, int depth)
         {
             int player = board.curPlayer;
-            const int DIF = 1;
+            
             if (won(board, player)) return new double[] { -1, -1, INF };
             if (lost(board, player)) return new double[] { -1, -1, -INF };
+
             int bestX = -1;
             int bestY = -1;
             double bestEval = -INF - 1;
             int cntBest = 0;
-            int add = 0;
-            if (depth <= 1) add += 1;
-            //Application.Current.MainPage.DisplayAlert("MakeVerBlockMove:", "starting", "OK");
             for (int i = 0; i < SIZE - 1; i++)
             {
                 for (int j = 0; j < SIZE - 1; j++)
                 {
                     if (!board.CanPlaceBlockVer(i, j)) continue;
-                    //BoardViewModel nBoard = new BoardViewModel(board, false);
-                    //bool b1 = nBoard.CanPlaceBlockVer(i, j);
-                    //if (!b1) continue;
                     board.PlaceBlockVer(i, j, depth + 1);
                     bool b2 = board.CanPlaceBlockVer(i, j + 1);
                     if (!b2)
@@ -287,7 +282,7 @@ namespace QuoridorApp.ViewModels
                     board.PlaceBlockVer(i, j + 1, depth + 1);
 
 
-                    if ((-evaluate(board, 1 - player) + add < bestEval) && false)
+                    if ((-evaluate(board, 1 - player) < bestEval) && false)
                     {
                         board.RemoveBlockVer(i, j);
                         continue;

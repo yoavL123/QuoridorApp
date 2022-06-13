@@ -69,6 +69,17 @@ namespace QuoridorApp.ViewModels
 
         }
 
+        public static bool isBot(string s)
+        {
+            string[] botNames = new string[] { "EasyBot", "MediumBot", "HardBot" };
+            foreach(var str in botNames)
+            {
+                if (str == s) return true;
+            }
+            return false;
+        }
+
+
         private bool IsEmpty(int x, int y)
         {
             if (playerLoc[0][0] == x && playerLoc[0][1] == y) return false;
@@ -81,7 +92,7 @@ namespace QuoridorApp.ViewModels
             return playerLoc[player][1] == SIZE - 1 - playerStartLoc[player][1];
         }
 
-        bool CheckWon()
+        public bool CheckWon()
         {
             return (playerLoc[0][1] == SIZE - 1) || (playerLoc[1][1] == 0);
         }
@@ -215,7 +226,7 @@ namespace QuoridorApp.ViewModels
             playerLoc[player][1] = newY;
             if (CheckWon())
             {
-                return;
+                //return;
             }
             curPlayer = 1 - curPlayer;
         }

@@ -20,6 +20,14 @@ namespace QuoridorApp.Views
             InitializeComponent();
         }
         */
+
+        public BoardBot(string botLevel, string whoStarts)
+        {
+            //vm = new BotViewModel(botL);
+            //BindingContext = vm;
+            InitializeComponent();
+
+        }
         public BoardBot()
         {
             InitializeComponent();

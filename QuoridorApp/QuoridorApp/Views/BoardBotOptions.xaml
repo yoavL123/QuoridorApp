@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:local="clr-namespace:QuoridorApp.ViewModels"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuoridorApp.Views.BoardBotOptions"
+             Style="{DynamicResource pageStyle}">
+    <ContentPage.Content>
+        <StackLayout>
+
+            <Label Text="Select options the types of the first and second player:"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <Label Text="Select the type of the first player:" />
+            <Grid RadioButtonGroup.GroupName="Type1" RadioButtonGroup.SelectedValue="{Binding Type1}">
+                <RadioButton Content="Me" Value="Me" Grid.Row="0" Grid.Column="0"/>
+                <RadioButton Content="Guest" Value="Guest" Grid.Row="0" Grid.Column="1"/>
+                <RadioButton Content="Easy Bot" Value="EasyBot" Grid.Row="0" Grid.Column="2"/>
+                <RadioButton Content="Medium Bot" Value="MediumBot" Grid.Row="0" Grid.Column="3"/>
+                <RadioButton Content="Hard Bot" Value="HardBot" Grid.Row="0" Grid.Column="4"/>
+            </Grid>
+            <Label Text="Select the type of the second player:" />
+            <Grid RadioButtonGroup.GroupName="Type2" RadioButtonGroup.SelectedValue="{Binding Type2}">
+                <RadioButton Content="Me" Value="Me" Grid.Row="0" Grid.Column="0"/>
+                <RadioButton Content="Guest" Value="Guest" Grid.Row="0" Grid.Column="1"/>
+                <RadioButton Content="Easy Bot" Value="EasyBot" Grid.Row="0" Grid.Column="2"/>
+                <RadioButton Content="Medium Bot" Value="MediumBot" Grid.Row="0" Grid.Column="3"/>
+                <RadioButton Content="Hard Bot" Value="HardBot" Grid.Row="0" Grid.Column="4"/>
+            </Grid>
+            
+
+
+            <!--
+        <StackLayout RadioButtonGroup.GroupName="Level"  RadioButtonGroup.SelectedValue="{Binding Level}" >
+            <Label Text="Select options for a game against the bot:"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <Label Text="Select bot level:" />
+            <RadioButton Content="Easy" Value="Easy">
+            </RadioButton>
+            <RadioButton Content="Medium" Value="Medium">
+            </RadioButton>
+            <RadioButton Content="Hard" Value="Hard">
+            </RadioButton>
+            <Label Text="Select who starts:" />
+-->
+        <!---
+        <StackLayout>
+            
+            <Label Text="Select options for a game against the bot:"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <Label Text="Select bot level:" />
+            <Grid RadioButtonGroup.GroupName="Level" RadioButtonGroup.SelectedValue="{Binding Level}">
+
+                <RadioButton Content="Easy" Value="Easy" Grid.Row="0"
+               Grid.Column="0">
+                </RadioButton>
+                <RadioButton Content="Medium" Value="Medium" Grid.Row="0"
+               Grid.Column="1">
+                </RadioButton>
+                <RadioButton Content="Hard" Value="Hard" Grid.Row="0"
+               Grid.Column="2">
+                </RadioButton>
+            </Grid>
+            <Label Text="Select who starts:" />
+            <Grid RadioButtonGroup.GroupName="WhoStarts" RadioButtonGroup.SelectedValue="{Binding WhoStarts}">
+
+                <RadioButton Content="Me" Value="Me" Grid.Row="0"
+               Grid.Column="0">
+                </RadioButton>
+                <RadioButton Content="Bot" Value="Bot" Grid.Row="0"
+               Grid.Column="1">
+                </RadioButton>
+            </Grid>
+-->
+            
+            <!--
+            <RadioButton Content="Easy" GroupName="Level" RadioButtonGroup.SelectedValue="{Binding Level}">
+            </RadioButton>
+            <RadioButton Content="Medium" GroupName="Level" RadioButtonGroup.SelectedValue="{Binding Level}">
+            </RadioButton>
+            <RadioButton Content="Hard" GroupName="Level" RadioButtonGroup.SelectedValue="{Binding Level}">
+            </RadioButton>
+            <Label Text="Select who starts:" />
+
+            <RadioButton Content="Me" GroupName="WhoStarts">
+            </RadioButton>
+            <RadioButton Content="The bot" GroupName="WhoStarts">
+            </RadioButton>
+-->
+            <Button Command="{Binding SubmitBoardBotOptionsCommand}" Text="Start Game!" Style="{DynamicResource buttonStyle}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

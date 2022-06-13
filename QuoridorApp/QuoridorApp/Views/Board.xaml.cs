@@ -35,8 +35,11 @@ namespace QuoridorApp.Views
         BlockTile[,] horBlockBoard;
         BlockTile[,] verBlockBoard;
         CenterTile[,] centerBlocked;
-        public Board()
+
+        string[] playersType;
+        public Board(string type1, string type2)
         {
+            playersType = new string[] { type1, type2 };
             InitializeComponent();
             //vm = new BoardViewModel(theBoard);
             //BindingContext = vm;
@@ -113,7 +116,8 @@ namespace QuoridorApp.Views
                 }
                 
             }
-            DisplayBoard();
+            //DisplayBoard();
+            HandleGame();
             /*
             #region Move Pawn
             public ICommand MovePawnCommand => new Command(OnMovePawnCommand);
@@ -127,6 +131,20 @@ namespace QuoridorApp.Views
             */
         }
 
+
+        void HandleGame()
+        {
+            DisplayBoard();
+            if (vm.CheckWon()) return;
+
+            if (BoardViewModel.isBot(playersType[vm.curPlayer]))
+            {
+                BotViewModel bot = new BotViewModel();
+                bot.MakeMove(vm);
+                HandleGame();
+            }
+            
+        }
 
         void DisplayBoard()
         {
@@ -161,21 +179,30 @@ namespace QuoridorApp.Views
 
         void Move(int newX, int newY)
         {
+            if (BoardViewModel.isBot(playersType[vm.curPlayer])) return;
+            if (vm.CheckWon()) return;
             vm.Move(newX, newY);
-            DisplayBoard();
+            //DisplayBoard();
+            HandleGame();
         }
 
 
         void PlaceBlockHor(int X, int Y)
         {
+            if (BoardViewModel.isBot(playersType[vm.curPlayer])) return;
+            if (vm.CheckWon()) return;
             vm.PlaceBlockHor(X, Y);
-            DisplayBoard();
+            //DisplayBoard();
+            HandleGame();
         }
 
         void PlaceBlockVer(int X, int Y)
         {
+            if (BoardViewModel.isBot(playersType[vm.curPlayer])) return;
+            if (vm.CheckWon()) return;
             vm.PlaceBlockVer(X, Y);
-            DisplayBoard();
+            //DisplayBoard();
+            HandleGame();
         }
 
 

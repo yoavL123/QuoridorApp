@@ -31,8 +31,8 @@ namespace QuoridorApp.ViewModels
 
         public async void OnToBoardCommand()
         {
-            Page p = new Views.Board();
-            await App.Current.MainPage.Navigation.PushAsync(p);
+            //Page p = new Views.Board();
+            //await App.Current.MainPage.Navigation.PushAsync(p);
 
         }
         #endregion
@@ -42,7 +42,8 @@ namespace QuoridorApp.ViewModels
 
         public async void OnToBoardBotCommand()
         {
-            Page p = new Views.BoardBot();
+            //Page p = new Views.BoardBot();
+            Page p = new Views.BoardBotOptions();
             await App.Current.MainPage.Navigation.PushAsync(p);
         }
         #endregion
