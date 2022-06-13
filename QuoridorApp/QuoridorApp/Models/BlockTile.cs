@@ -8,39 +8,45 @@ namespace QuoridorApp.Models
     public class BlockTile : Button
     {
         //public static Color[] blockTileColStatus = new Color[] { Color.DarkRed, Color.BurlyWood, Color.BurlyWood, Color.DarkOliveGreen};
-        public static Color[] blockTileColStatus = new Color[] { Color.DarkRed, Color.BurlyWood, Color.Beige, Color.DarkOliveGreen };
-        public static Dictionary<string, int> DicBlockStatus = new Dictionary<string, int>()
-        {
-            {"Empty", 0 },
-            {"Player1", 1},
-            {"Player2", 2 },
-            {"Pending", 3 }
-        };
+        //public static Color[] blockTileColStatus = new Color[] { Color.DarkRed, Color.BurlyWood, Color.Beige, Color.DarkOliveGreen };
+        
+        
+
+
+
         int r, c;
-        int blockTileStatus;
-        public int BlockTileStatus
+        string blockTileStatus; // "Empty", "Player1", "Player2"
+
+        //public static Color[] centerTileColStatus = new Color[] { Color.DarkRed, Color.BurlyWood, Color.Beige, Color.DarkOliveGreen };
+
+        public static Dictionary<string, Color> DicColBlockStatus = new Dictionary<string, Color>()
+        {
+            {"Empty", Color.DarkRed },
+            {"Player1",  Color.BurlyWood},
+            {"Player2", Color.Beige },
+            {"Pending", Color.DarkOliveGreen }
+        };
+        public string BlockTileStatus
         {
             get { return blockTileStatus; }
             set
             {
                 blockTileStatus = value;
-                this.BackgroundColor = blockTileColStatus[blockTileStatus];
+                this.BackgroundColor = DicColBlockStatus[blockTileStatus];
             }
         }
-        //public event EventHandler<int> PawnTileStatusChanged;
-
-
-        public BlockTile(int row, int col)
+        public BlockTile(int r, int c)
         {
-            this.r = row; this.c = col;
-            BlockTileStatus = DicBlockStatus["Empty"];
-            //this.BackgroundColor = pawnTileColStatus[pawnTileStatus];
+            this.r = r; this.c = c;
+            BlockTileStatus = "Empty";
         }
-        public BlockTile(BlockTile blockTile)
+
+        public BlockTile(BlockTile other)
         {
-            this.r = blockTile.r;
-            this.c = blockTile.c;
-            this.blockTileStatus = blockTile.blockTileStatus;
+            this.r = other.r;
+            this.c = other.c;
+            this.BlockTileStatus = other.BlockTileStatus;
         }
+
     }
 }

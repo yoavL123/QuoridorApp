@@ -23,14 +23,36 @@ namespace QuoridorApp.Views
         public BoardBot()
         {
             InitializeComponent();
-            vm = new BoardViewModel(theBoard, false, true);
+            //vm = new BoardViewModel(theBoard, false, true);
             /*
             vm.isBot[0] = true;
             vm.isBot[1] = false;
             BotViewModel bot = new BotViewModel();
             bot.MakeMove(vm, 1, true);
             */
-            BindingContext = vm;
+            //BindingContext = vm;
         }
     }
+    //public partial class BoardBot : ContentPage
+    //{
+    //    BoardViewModel vm;
+    //    /*
+    //    public BoardBot()
+    //    {
+    //        InitializeComponent();
+    //    }
+    //    */
+    //    public BoardBot()
+    //    {
+    //        InitializeComponent();
+    //        //vm = new BoardViewModel(theBoard, false, true);
+    //        /*
+    //        vm.isBot[0] = true;
+    //        vm.isBot[1] = false;
+    //        BotViewModel bot = new BotViewModel();
+    //        bot.MakeMove(vm, 1, true);
+    //        */
+    //        BindingContext = vm;
+    //    }
+    //}
 }

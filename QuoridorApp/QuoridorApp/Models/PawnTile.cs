@@ -17,32 +17,31 @@ namespace QuoridorApp.Models
     public class PawnTile : Button
     {
         
-        public static Color[] pawnTileColStatus = new Color[] { Color.Black, Color.DarkBlue, Color.Gray };
-        public static Dictionary<string, int> DicPawnStatus = new Dictionary<string, int>()
-        {
-            {"Empty", 0 },
-            {"Player1", 1},
-            {"Player2", 2 }
-        };
+        
         int r, c;
-        int pawnTileStatus;
-        public int PawnTileStatus
+        string pawnTileStatus; // "Empty", "Player1", "Player2"
+
+        //public static Color[] centerTileColStatus = new Color[] { Color.DarkRed, Color.BurlyWood, Color.Beige, Color.DarkOliveGreen };
+
+        public static Dictionary<string, Color> DicColPawnStatus = new Dictionary<string, Color>()
+        {
+            {"Empty", Color.Black },
+            {"Player1", Color.DarkBlue},
+            {"Player2", Color.Gray },
+        };
+        public string PawnTileStatus
         {
             get { return pawnTileStatus; }
             set
             {
                 pawnTileStatus = value;
-                this.BackgroundColor = pawnTileColStatus[pawnTileStatus];
+                this.BackgroundColor = DicColPawnStatus[pawnTileStatus];
             }
         }
-        //public event EventHandler<int> PawnTileStatusChanged;
-
-
-        public PawnTile(int row, int col)
+        public PawnTile(int r, int c)
         {
-            this.r = row; this.c = col;
-            PawnTileStatus = DicPawnStatus["Empty"];
-            //this.BackgroundColor = pawnTileColStatus[pawnTileStatus];
+            this.r = r; this.c = c;
+            PawnTileStatus = "Empty";
         }
 
         public PawnTile(PawnTile other)
