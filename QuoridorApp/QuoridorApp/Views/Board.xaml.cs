@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
 using Xamarin.Forms.Xaml;
 
 
@@ -37,6 +39,9 @@ namespace QuoridorApp.Views
         CenterTile[,] centerBlocked;
 
         string[] playersType;
+
+        public object CoreDispatcherPriority { get; }
+
         public Board(string type1, string type2)
         {
             playersType = new string[] { type1, type2 };
@@ -117,7 +122,17 @@ namespace QuoridorApp.Views
                 
             }
             //DisplayBoard();
-            HandleGame();
+
+            //HandleGame();
+            //Task.Run(() => DisplayBoard());
+            Task.Run(() => HandleGame());
+            //HandleGame();
+            //Task.Run(() => LaunchHandleGame());
+            //while (true)
+            //{
+            //    DisplayBoard();
+            //}
+
             /*
             #region Move Pawn
             public ICommand MovePawnCommand => new Command(OnMovePawnCommand);
@@ -131,77 +146,91 @@ namespace QuoridorApp.Views
             */
         }
 
-
-        void HandleGame()
+        
+        async void HandleGame()
         {
+            DisplayBoard();
+            
+            //Task.Run(() => DisplayBoard());
             DisplayBoard();
             if (vm.CheckWon()) return;
 
             if (BoardViewModel.isBot(playersType[vm.curPlayer]))
             {
-                BotViewModel bot = new BotViewModel();
-                bot.MakeMove(vm);
-                HandleGame();
+                BotViewModel bot = new BotViewModel(playersType[vm.curPlayer]);
+                //await bot.MakeMove(vm);
+                BoardViewModel nboard = new BoardViewModel(vm);
+                
+                await bot.MakeMove(nboard);
+                Thread.Sleep(500);
+                vm = nboard;
+                //HandleGame();
             }
             
         }
 
         void DisplayBoard()
         {
-            var rows = horBlockBoard.GetLength(0);
-            var cols = horBlockBoard.GetLength(1);
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    horBlockBoard[i, j].BlockTileStatus = vm.horBlockBoard[i, j];
-            rows = verBlockBoard.GetLength(0);
-            cols = verBlockBoard.GetLength(1);
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    verBlockBoard[i, j].BlockTileStatus = vm.verBlockBoard[i, j];
-            rows = centerBlocked.GetLength(0);
-            cols = centerBlocked.GetLength(1);
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    centerBlocked[i, j].CenterTileStatus = vm.centerBlocked[i, j];
+            Device.BeginInvokeOnMainThread(() => {
+                var rows = horBlockBoard.GetLength(0);
+                var cols = horBlockBoard.GetLength(1);
+                for (int i = 0; i < rows; i++)
+                    for (int j = 0; j < cols; j++)
+                        horBlockBoard[i, j].BlockTileStatus = vm.horBlockBoard[i, j];
+                rows = verBlockBoard.GetLength(0);
+                cols = verBlockBoard.GetLength(1);
+                for (int i = 0; i < rows; i++)
+                    for (int j = 0; j < cols; j++)
+                        verBlockBoard[i, j].BlockTileStatus = vm.verBlockBoard[i, j];
+                rows = centerBlocked.GetLength(0);
+                cols = centerBlocked.GetLength(1);
+                for (int i = 0; i < rows; i++)
+                    for (int j = 0; j < cols; j++)
+                        centerBlocked[i, j].CenterTileStatus = vm.centerBlocked[i, j];
 
 
-            rows = pawnBoard.GetLength(0);
-            cols = pawnBoard.GetLength(1);
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    pawnBoard[i, j].PawnTileStatus = "Empty";
+                rows = pawnBoard.GetLength(0);
+                cols = pawnBoard.GetLength(1);
+                for (int i = 0; i < rows; i++)
+                    for (int j = 0; j < cols; j++)
+                        pawnBoard[i, j].PawnTileStatus = "Empty";
 
-            pawnBoard[vm.playerLoc[0][0], vm.playerLoc[0][1]].PawnTileStatus = "Player1";
-            pawnBoard[vm.playerLoc[1][0], vm.playerLoc[1][1]].PawnTileStatus = "Player2";
+                pawnBoard[vm.playerLoc[0][0], vm.playerLoc[0][1]].PawnTileStatus = "Player1";
+                pawnBoard[vm.playerLoc[1][0], vm.playerLoc[1][1]].PawnTileStatus = "Player2";
+            });
+            
             
         }
 
 
         void Move(int newX, int newY)
         {
+            DisplayBoard();
             if (BoardViewModel.isBot(playersType[vm.curPlayer])) return;
             if (vm.CheckWon()) return;
             vm.Move(newX, newY);
-            //DisplayBoard();
+            DisplayBoard();
             HandleGame();
         }
 
 
         void PlaceBlockHor(int X, int Y)
         {
+            DisplayBoard();
             if (BoardViewModel.isBot(playersType[vm.curPlayer])) return;
             if (vm.CheckWon()) return;
             vm.PlaceBlockHor(X, Y);
-            //DisplayBoard();
+            DisplayBoard();
             HandleGame();
         }
 
         void PlaceBlockVer(int X, int Y)
         {
+            DisplayBoard();
             if (BoardViewModel.isBot(playersType[vm.curPlayer])) return;
             if (vm.CheckWon()) return;
             vm.PlaceBlockVer(X, Y);
-            //DisplayBoard();
+            DisplayBoard();
             HandleGame();
         }
 

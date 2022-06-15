@@ -22,12 +22,11 @@ namespace QuoridorApp.ViewModels
         public int[][] playerStartLoc = new int[][]{ new int[]{ SIZE / 2, 0 }, new int[]{ SIZE / 2, SIZE - 1 } };
 
         public static string[] stateString = new string[] { "Empty", "Player1", "Player2" };
-        //Dictionary<string, int> stateInt = new Dictionary<string, int>();
 
 
-
-
-
+        
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         public string[,] horBlockBoard; // {"Empty", "Player1", "Player2"}
         public string[,] verBlockBoard; // {"Empty", "Player1", "Player2"}
         public string[,] centerBlocked; // {"Empty", "Player1", "Player2"}
@@ -38,8 +37,40 @@ namespace QuoridorApp.ViewModels
 
         public int curPlayer;
 
-        
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        private static void Copy1D<T>(ref T[] a, T[] b)
+        {
+            a = new T[b.Length];
+            for (int i = 0; i < b.Length; i++)
+            {
+                a[i] = b[i];
+            }
+        }
+        private static void Copy2D<T>(ref T[,] a, T[,] b)
+        {
+            var rows = b.GetLength(0);
+            var cols = b.GetLength(1);
+            a = new T[rows, cols];
+
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    a[i, j] = b[i, j];
+        }
+        public BoardViewModel(BoardViewModel b)
+        {
+            horBlockBoard = new string[SIZE, SIZE - 1];
+            verBlockBoard = new string[SIZE - 1, SIZE];
+            centerBlocked = new string[SIZE - 1, SIZE - 1];
+            playerLoc = new int[][] { new int[] { b.playerLoc[0][0], b.playerLoc[0][1] }, new int[] { b.playerLoc[1][0], b.playerLoc[1][1] } };
+            Copy1D<int>(ref blocksLeft, b.blocksLeft);
+            blockStatus = b.blockStatus;
+            curPlayer = b.curPlayer;
+
+            Copy2D<string>(ref horBlockBoard, b.horBlockBoard);
+            Copy2D<string>(ref verBlockBoard, b.verBlockBoard);
+            Copy2D<string>(ref centerBlocked, b.centerBlocked);
+        }
         public BoardViewModel()
         {
             horBlockBoard = new string[SIZE, SIZE - 1];
@@ -108,7 +139,7 @@ namespace QuoridorApp.ViewModels
             }
             else
             {
-                if (curY != newY) return false;
+                //if (curY != newY) return false;
                 return verBlockBoard[Math.Min(curX, newX), curY] == "Empty";
             }
         }
@@ -161,6 +192,7 @@ namespace QuoridorApp.ViewModels
         public bool CanMove(int newX, int newY)
         {
             if (newX < 0 || newX >= SIZE || newY < 0 || newY >= SIZE) return false;
+            if (!IsEmpty(newX, newY)) return false;
             if (blockStatus != "Empty") return false;
             int player = curPlayer;
             if (Math.Abs(playerLoc[player][0] - newX) + Math.Abs(playerLoc[player][1] - newY) == 0) return false;
@@ -195,7 +227,7 @@ namespace QuoridorApp.ViewModels
                     return false;
                 }
             }
-            if (!IsEmpty(newX, newY)) return false;
+            
             return true;
         }
 
@@ -208,7 +240,7 @@ namespace QuoridorApp.ViewModels
         }
 
         
-        public void Move(int newX, int newY, int depth = 1)
+        public void Move(int newX, int newY)
         {
             
             if (!CanMove(newX, newY)) return;

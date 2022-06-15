@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace QuoridorApp.ViewModels
@@ -9,13 +10,17 @@ namespace QuoridorApp.ViewModels
     {
         const int SIZE = 9;
         const int INF = (int)1e9;
-        const int MAX_DEPTH = 3;
+        //const int MAX_DEPTH = 3;
+        int MAX_DEPTH;
 
         static int counter = 1;
 
-        public BotViewModel()
+        public BotViewModel(string botType)
         {
-
+            MAX_DEPTH = 1;
+            if (botType == "EasyBot") MAX_DEPTH = 1;
+            if (botType == "MediumBot") MAX_DEPTH = 2;
+            if (botType == "HardBot") MAX_DEPTH = 3;
         }
 
 
@@ -111,7 +116,7 @@ namespace QuoridorApp.ViewModels
         [bestX, bestY, bestEval]
 
         */
-        public double[] MakePawnMove(BoardViewModel board, int depth)
+        public async Task<double[]> MakePawnMove(BoardViewModel board, int depth)
         {
             int player = board.curPlayer;
             if (won(board, player)) return new double[] { -1, -1, INF };
@@ -127,27 +132,24 @@ namespace QuoridorApp.ViewModels
 
                     if (board.CanMove(i, j))
                     {
-                        //BoardViewModel nBoard = new BoardViewModel(board);
-                        //BoardViewModel nBoard = new BoardViewModel(board);
-                        //nBoard.Move(i, j, false);
+
                         int oldX = board.playerLoc[board.curPlayer][0];
                         int oldY = board.playerLoc[board.curPlayer][1];
-                        board.Move(i, j, depth);
-                        //nBoard.Move(i, j, false, depth+1);
+                        board.Move(i, j);
                         double curEval;
                         if (depth < MAX_DEPTH)
                         {
-                            //board.curPlayer = 1 - board.curPlayer;
-                            curEval = -MakeMove(board, depth + 1);
-                            //board.curPlayer = 1 - board.curPlayer;
+                            curEval = -(await MakeMove(board, depth + 1));
+                            board.MoveBack(oldX, oldY);
                         }
                         else
                         {
-                            Application.Current.MainPage.DisplayAlert("MakePawnMove:", "evaluating" + depth, "OK");
-                            board.curPlayer = 1 - board.curPlayer;
+                            //Application.Current.MainPage.DisplayAlert("MakePawnMove:", "evaluating" + depth, "OK");
+                            //board.curPlayer = 1 - board.curPlayer;
                             curEval = -evaluate(board, 1 - player);
                         }
-                        board.MoveBack(oldX, oldY);
+                        
+
                         if (curEval > bestEval)
                         {
                             bestX = i;
@@ -177,7 +179,7 @@ namespace QuoridorApp.ViewModels
         }
 
 
-        public double[] MakeHorBlockMove(BoardViewModel board, int depth)
+        public async Task<double[]> MakeHorBlockMove(BoardViewModel board, int depth)
         {
             int player = board.curPlayer;
             const int DIF = 1;
@@ -209,27 +211,28 @@ namespace QuoridorApp.ViewModels
 
                     board.PlaceBlockHor(i + 1, j, depth + 1);
 
-
+                    /*
                     if ((-evaluate(board, 1 - player) + add < bestEval) && false)
                     {
                         board.RemoveBlockHor(i, j);
                         continue;
                     }
-
+                    */
 
                     double curEval;
                     if (depth < MAX_DEPTH)
                     {
                         //board.curPlayer = 1 - board.curPlayer;
-                        curEval = -MakeMove(board, depth + 1);
+                        curEval = -(await MakeMove(board, depth + 1));
                         //board.curPlayer = 1 - board.curPlayer;
+                        board.RemoveBlockHor(i, j);
                     }
                     else
                     {
-                        Application.Current.MainPage.DisplayAlert("MakeHorBlockMove:", "evaluating" + depth, "OK");
+                        //Application.Current.MainPage.DisplayAlert("MakeHorBlockMove:", "evaluating" + depth, "OK");
                         curEval = -evaluate(board, 1 - player);
                     }
-                    board.RemoveBlockHor(i, j);
+                    
                     if (curEval > bestEval)
                     {
                         bestX = i;
@@ -256,7 +259,7 @@ namespace QuoridorApp.ViewModels
             double[] res = new double[] { bestX, bestY, bestEval };
             return res;
         }
-        public double[] MakeVerBlockMove(BoardViewModel board, int depth)
+        public async Task<double[]> MakeVerBlockMove(BoardViewModel board, int depth)
         {
             int player = board.curPlayer;
             
@@ -296,7 +299,8 @@ namespace QuoridorApp.ViewModels
                     {
                         //Application.Current.MainPage.DisplayAlert("MakeVerBlockMove:", "making move" + depth, "OK");
                         //board.curPlayer = 1 - board.curPlayer;
-                        curEval = -MakeMove(board, depth + 1);
+                        curEval = -(await MakeMove(board, depth + 1));
+                        board.RemoveBlockVer(i, j);
                         //board.curPlayer = 1 - board.curPlayer;
                     }
                     else
@@ -305,7 +309,7 @@ namespace QuoridorApp.ViewModels
                         curEval = -evaluate(board, 1 - player);
                     }
 
-                    board.RemoveBlockVer(i, j);
+                    
                     if (curEval > bestEval)
                     {
                         bestX = i;
@@ -344,7 +348,7 @@ namespace QuoridorApp.ViewModels
             return Math.Max(a, Math.Max(b, c));
         }
 
-        public double MakeMove(BoardViewModel board, int depth = 1)
+        public async Task<double> MakeMove(BoardViewModel board, int depth = 1)
         {
             counter++;
             /*
@@ -362,12 +366,12 @@ namespace QuoridorApp.ViewModels
                 return val;
             }
             //BoardViewModel nBoard = new BoardViewModel(board);
-            double[] pawnMoveRes = MakePawnMove(board, depth);
+            double[] pawnMoveRes = await MakePawnMove(board, depth);
             //board.Move((int)pawnMoveRes[0], (int)pawnMoveRes[1], realGame);
             //return pawnMoveRes[2];
 
-            double[] horBlockMoveRes = MakeHorBlockMove(board, depth);
-            double[] verBlockMoveRes = MakeVerBlockMove(board, depth);
+            double[] horBlockMoveRes = await MakeHorBlockMove(board, depth);
+            double[] verBlockMoveRes = await MakeVerBlockMove(board, depth);
             //board.curPlayer = (board.curPlayer + 1) % 2;
             //double[] pawnMoveRes = MakePawnMove(ref board, player, depth);
             double maxV = max3(pawnMoveRes[2], horBlockMoveRes[2], verBlockMoveRes[2]);
@@ -383,7 +387,7 @@ namespace QuoridorApp.ViewModels
                 {
                     Console.WriteLine("hi");
                 }
-                board.Move((int)pawnMoveRes[0], (int)pawnMoveRes[1], depth);
+                board.Move((int)pawnMoveRes[0], (int)pawnMoveRes[1]);
 
                 if (depth > 1)
                 {
