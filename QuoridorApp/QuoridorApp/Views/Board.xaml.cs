@@ -31,6 +31,8 @@ namespace QuoridorApp.Views
         public const double BLOCK_TILE_SMALL = 15;
         public const double BLOCK_TILE_BIG = 60;
 
+        private const int SLEEP_TIME_MILISECONDS = 200;
+
         public const int SIZE = 9;
 
         PawnTile[,] pawnBoard;
@@ -39,11 +41,13 @@ namespace QuoridorApp.Views
         CenterTile[,] centerBlocked;
 
         string[] playersType;
+        bool hasFinished;
 
         public object CoreDispatcherPriority { get; }
 
         public Board(string type1, string type2)
         {
+            hasFinished = false;
             playersType = new string[] { type1, type2 };
             InitializeComponent();
             //vm = new BoardViewModel(theBoard);
@@ -121,6 +125,7 @@ namespace QuoridorApp.Views
                 }
                 
             }
+            
             //DisplayBoard();
 
             //HandleGame();
@@ -146,14 +151,64 @@ namespace QuoridorApp.Views
             */
         }
 
-        
+        public void FinishGame()
+        {
+            if (hasFinished) return;
+            hasFinished = true;
+            /*
+            Button toRatingChangesButton = new Button();
+            toRatingChangesButton.BindingContext = "To rating Change";
+            */
+            string winnerPlayer = playersType[0];
+            string loserPlayer = playersType[1];
+            int winnerIndex = 1;
+            if (!vm.CheckWonPos(0, vm.playerLoc[0][1]))
+            {
+                winnerPlayer = playersType[1];
+                loserPlayer = playersType[0];
+                winnerIndex = 2;
+            }
+            Button toRatingChangesBtn = new Button
+            {
+                Text = "Player " + winnerIndex + " won!\n" + "To Rating Changes",
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.BurlyWood,
+                
+            };
+            toRatingChangesBtn.IsVisible = true;
+            //toRatingChangesBtn.Clicked += async (sender, args) => await label.RelRotateTo(360, 1000);
+
+            
+
+
+            //toRatingChangesBtn.Clicked += (sender, args) => BoardViewModel.OnToRatingChangeCommand();
+            toRatingChangesBtn.Clicked += async (sender, args) =>
+            {
+                Page p = new Views.RatingChangePage(winnerPlayer, loserPlayer);
+                await App.Current.MainPage.Navigation.PushAsync(p);
+            };
+            //toRatingChangesBtn.Clicked += BoardViewModel.OnToRatingChangeCommand();
+            Device.BeginInvokeOnMainThread(() => {
+                ratingChangesButton.Children.Add(toRatingChangesBtn);
+                Rectangle buttonBounds = new Rectangle(0, 0, 300, 200);
+
+                AbsoluteLayout.SetLayoutBounds(toRatingChangesBtn, buttonBounds); // Add the button to the absolute layout in the view
+            });
+
+
+        }
         async void HandleGame()
         {
             DisplayBoard();
-            
+            SleepIfNotHardBot();
             //Task.Run(() => DisplayBoard());
             DisplayBoard();
-            if (vm.CheckWon()) return;
+            if (vm.CheckWon())
+            {
+                FinishGame();
+                return;
+            }
 
             if (BoardViewModel.isBot(playersType[vm.curPlayer]))
             {
@@ -162,9 +217,12 @@ namespace QuoridorApp.Views
                 BoardViewModel nboard = new BoardViewModel(vm);
                 
                 await bot.MakeMove(nboard);
-                Thread.Sleep(500);
+                
                 vm = nboard;
                 //HandleGame();
+                DisplayBoard();
+                //if(BoardViewModel.isBot(playersType[vm.curPlayer])) Task.Run(() => HandleGame());
+                Task.Run(() => HandleGame());
             }
             
         }
@@ -202,15 +260,29 @@ namespace QuoridorApp.Views
             
         }
 
-
+        private void SleepIfNotHardBot()
+        {
+            if(BoardViewModel.isBot(playersType[vm.curPlayer]))
+            {
+                if(playersType[vm.curPlayer] != "HardBot")
+                {
+                    Thread.Sleep(SLEEP_TIME_MILISECONDS);
+                }
+            }
+        }
         void Move(int newX, int newY)
         {
             DisplayBoard();
             if (BoardViewModel.isBot(playersType[vm.curPlayer])) return;
-            if (vm.CheckWon()) return;
+            if (vm.CheckWon())
+            {
+                FinishGame();
+                return;
+            }
             vm.Move(newX, newY);
             DisplayBoard();
-            HandleGame();
+            //HandleGame();
+            Task.Run(() => HandleGame());
         }
 
 
@@ -218,20 +290,30 @@ namespace QuoridorApp.Views
         {
             DisplayBoard();
             if (BoardViewModel.isBot(playersType[vm.curPlayer])) return;
-            if (vm.CheckWon()) return;
+            if (vm.CheckWon())
+            {
+                FinishGame();
+                return;
+            }
             vm.PlaceBlockHor(X, Y);
             DisplayBoard();
-            HandleGame();
+            //HandleGame();
+            Task.Run(() => HandleGame());
         }
 
         void PlaceBlockVer(int X, int Y)
         {
             DisplayBoard();
             if (BoardViewModel.isBot(playersType[vm.curPlayer])) return;
-            if (vm.CheckWon()) return;
+            if (vm.CheckWon())
+            {
+                FinishGame();
+                return;
+            }
             vm.PlaceBlockVer(X, Y);
             DisplayBoard();
-            HandleGame();
+            //HandleGame();
+            Task.Run(() => HandleGame());
         }
 
 
