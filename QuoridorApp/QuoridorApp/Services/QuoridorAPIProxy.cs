@@ -187,7 +187,7 @@ namespace QuoridorApp.Services
             }
         }
         */
-        public async void UpdateRatingChange(RatingChange ratingChange)
+        public async Task UpdateRatingChange(RatingChange ratingChange)
         {
             try
             {

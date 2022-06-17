@@ -15,7 +15,7 @@ namespace QuoridorApp.Models
 
 
         public static int INITIAL_RATING = 1200;
-
+        private static int K = 50;
         public RatingChange()
         {
 
@@ -30,7 +30,7 @@ namespace QuoridorApp.Models
             
             
         }
-        static double ProbabilityToWin(double rating1, double rating2)
+        public static double ProbabilityToWin(double rating1, double rating2)
         {
             return 1.0 * 1.0 / (1 + 1.0f *
                    (double)(Math.Pow(10, 1.0f *
@@ -41,7 +41,7 @@ namespace QuoridorApp.Models
         // K is a constant.
         // d determines whether Player A wins or
         // Player B.
-        static int EloRating(double Ra, double Rb, int K, bool d)
+        public static int EloRating(double Ra, double Rb, bool d)
         {
 
             // To calculate the Winning

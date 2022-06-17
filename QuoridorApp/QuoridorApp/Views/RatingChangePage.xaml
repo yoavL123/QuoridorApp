@@ -7,16 +7,35 @@
     
     <ContentPage.Content>
         <StackLayout>
+            <Label Text="13154njk5tgfsdgjsdfkg"/>
             <Label Text="Winner:"/>
-            <Label Text="{Binding Winner}"/>
-            <Label Text="Initial Rating:"/>
-            <Label Text="{Binding WinnerInitRating}"/>
 
+            <Label Text="{Binding Winner}"/>
+            <Label>
+                <Label.Text>
+                    <MultiBinding StringFormat="{}{0} ---> {1}">
+                        <Binding Path="WinnerInitRating" />
+                        <Binding Path="WinnerUpdatedRating" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
+            <Label Text="{Binding WinnerInitRating, WinnerUpdatedRating, StringFormat='{0} ---> {1}'}"/>
+            <Label Text="{Binding WinnerInitRating}"/>
+            <Label Text="{Binding WinnerUpdateRating}"/>
             <Label Text="Loser:"/>
             <Label Text="{Binding Loser}"/>
-            <Label Text="Initial Rating:"/>
+            <Label>
+                <Label.Text>
+                    <MultiBinding StringFormat="{}{0} ---> {1}">
+                        <Binding Path="LoserInitRating" />
+                        <Binding Path="LoserUpdatedRating" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
+            <Label Text="{Binding LoserInitRating, LoserUpdatedRating, StringFormat='{0} ---> {1}'}"/>
             <Label Text="{Binding LoserInitRating}"/>
-
+            <Label Text="{Binding LoserUpdateRating}"/>
+            <Button Text="Back To Main Menu" Command="{Binding ToMainMenuCommand}" Style="{DynamicResource buttonStyle}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

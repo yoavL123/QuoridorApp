@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace QuoridorApp.ViewModels
@@ -15,7 +16,8 @@ namespace QuoridorApp.ViewModels
         public string Winner
         {
             get => winner;
-            set {
+            set
+            {
                 winner = value;
                 OnPropertyChanged("Winner");
             }
@@ -27,7 +29,8 @@ namespace QuoridorApp.ViewModels
         public string Loser
         {
             get => loser;
-            set {
+            set
+            {
                 loser = value;
                 OnPropertyChanged("Loser");
             }
@@ -90,9 +93,22 @@ namespace QuoridorApp.ViewModels
         #endregion
 
 
-        public RatingChangePageViewModel()
-        { }
         
+
+        private bool IsPlayer(string playerName)
+        {
+            if (BoardViewModel.isBot(playerName))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private Player GetPlayer(string playerName)
+        {
+            if (playerName == "Me") return CurrentApp.CurrentPlayer;
+            return null;
+        }
         private async Task<int> GetRating(string playerName)
         {
             //return 2222;
@@ -114,13 +130,13 @@ namespace QuoridorApp.ViewModels
                 //player = await proxy.GetPlayer(playerName);
             }
             RatingChange ratingChange = await proxy.GetLastRatingChange(player);
-            if(ratingChange == null) // Player hasn't played yet
+            if (ratingChange == null) // Player hasn't played yet
             {
                 return RatingChange.INITIAL_RATING;
             }
             return ratingChange.AlteredRating;
         }
-        
+
         /*
         private int GetRating(string playerName)
         {
@@ -132,18 +148,101 @@ namespace QuoridorApp.ViewModels
             return RatingChange.INITIAL_RATING;
         }
         */
+
+        public ICommand ToMainMenuCommand => new Command(OnToMainMenuCommand);
+
+        public async void OnToMainMenuCommand()
+        {
+            Page p = new Views.MainMenu();
+            await App.Current.MainPage.Navigation.PushAsync(p);
+
+
+        }
+        /*
+        public async Task InitializeRatings()
+        {
+            int winnerInit, loserInit, winnerUpdated, loserUpdated;
+            winnerInit = await GetRating(Winner);
+            loserInit = await GetRating(Loser);
+
+            Device.BeginInvokeOnMainThread(() => {
+                WinnerInitRating = winnerInit;
+                LoserInitRating = loserInit;
+
+            });
+            //WinnerInitRating = await GetRating(Winner);
+            //LoserInitRating = await GetRating(Loser);
+
+
+            int newWinnerRating = RatingChange.EloRating(winnerInit, loserInit, true);
+            int newLoserRating = RatingChange.EloRating(loserInit, winnerInit, false);
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            if (IsPlayer(Winner))
+            {
+                RatingChange winnerRatingChange = new RatingChange(GetPlayer(Winner), newWinnerRating);
+                proxy.UpdateRatingChange(winnerRatingChange);
+            }
+            if (IsPlayer(Loser))
+            {
+                RatingChange loserRatingChange = new RatingChange(GetPlayer(Loser), newLoserRating);
+                proxy.UpdateRatingChange(loserRatingChange);
+            }
+
+
+            winnerUpdated = await GetRating(Winner);
+            loserUpdated = await GetRating(Loser);
+
+
+            Device.BeginInvokeOnMainThread(() => {
+                WinnerUpdatedRating = winnerUpdated;
+                LoserUpdatedRating = loserUpdated;
+
+            });
+
+
+            //WinnerUpdatedRating = await GetRating(Winner);
+            //LoserUpdatedRating = await GetRating(Loser);
+        }
+        */
         
         private async Task InitializeRatings()
         {
-            WinnerInitRating = await GetRating(Winner);
-            LoserInitRating = await GetRating(Loser);
+            int winnerInit, loserInit, winnerUpdated, loserUpdated;
+            winnerInit = await GetRating(Winner);
+            loserInit = await GetRating(Loser);
+            LoserInitRating = loserInit;
+            WinnerInitRating = winnerInit;
+            //WinnerInitRating = await GetRating(Winner);
+            //LoserInitRating = await GetRating(Loser);
+
+            
+            int newWinnerRating = RatingChange.EloRating(WinnerInitRating, LoserInitRating, true);
+            int newLoserRating = RatingChange.EloRating(LoserInitRating, WinnerInitRating, false);
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            if(IsPlayer(Winner))
+            {
+                RatingChange winnerRatingChange = new RatingChange(GetPlayer(Winner), newWinnerRating);
+                await proxy.UpdateRatingChange(winnerRatingChange);
+            }
+            if (IsPlayer(Loser))
+            {
+                RatingChange loserRatingChange = new RatingChange(GetPlayer(Loser), newLoserRating);
+                await proxy.UpdateRatingChange(loserRatingChange);
+            }
 
 
-            WinnerUpdatedRating = await GetRating(Winner);
-            LoserUpdatedRating = await GetRating(Loser);
+            winnerUpdated = await GetRating(Winner);
+            loserUpdated = await GetRating(Loser);
 
+
+            WinnerUpdatedRating = winnerUpdated;
+            LoserUpdatedRating = loserUpdated;
+            
+
+            //WinnerUpdatedRating = await GetRating(Winner);
+            //LoserUpdatedRating = await GetRating(Loser);
         }
-
+        
 
         /*
         private void InitializeRatings()
@@ -156,24 +255,17 @@ namespace QuoridorApp.ViewModels
             LoserUpdatedRating = GetRating(Loser);
         }
         */
+        
         public RatingChangePageViewModel(string winnerPlayer, string loserPlayer)
         {
             Winner = winnerPlayer;
             Loser = loserPlayer;
 
-
-            //Device.BeginInvokeOnMainThread(() => {
-            //    InitializeRatings();
-            //});
-
-            //Task.Run(async () => InitializeRatings()); 
-
-            //Task task = InitializeRatings();
-            //task.Wait();
-
+            //Task.Run(async () => await InitializeRatings());
             InitializeRatings();
-            //task.RunSynchronously();
         }
 
     }
+
 }
+

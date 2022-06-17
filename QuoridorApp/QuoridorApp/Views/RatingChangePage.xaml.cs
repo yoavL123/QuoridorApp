@@ -19,12 +19,17 @@ namespace QuoridorApp.Views
 
             InitializeComponent();
 
+            //vm = new RatingChangePageViewModel(winner, loser);
+            //Task.Run(async () => BindingContext = await RatingChangePageViewModel.createViewModel(winner, loser));
+            //Task.Run(async () => BindingContext = await RatingChangePageViewModel.createViewModel(winner, loser));
+            //BindingContext = new RatingChangePageViewModel(winner, loser);
             vm = new RatingChangePageViewModel(winner, loser);
             BindingContext = vm;
-            
-            
-            
-            
+            //vm.InitializeRatings();
+
+
+
+
             // FOR SOME REASON THIS HAS TO COME FIRST
 
         }
