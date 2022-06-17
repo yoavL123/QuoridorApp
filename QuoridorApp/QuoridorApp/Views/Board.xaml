@@ -5,10 +5,11 @@
              x:Class="QuoridorApp.Views.Board"
              Style="{DynamicResource pageStyle}">
 
-    <!-- Binding to "BoardViewModel" -->
+    <!-- Binding to "BoardViewModel" 
     <ContentPage.BindingContext>
         <local:BoardViewModel></local:BoardViewModel>
     </ContentPage.BindingContext>
+    -->
     <ContentPage.Resources>
         <Style x:Key="SignUpStack" TargetType="StackLayout">
             <Setter Property="Orientation" Value="Vertical"/>

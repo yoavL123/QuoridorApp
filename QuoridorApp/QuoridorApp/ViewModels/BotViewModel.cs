@@ -9,12 +9,27 @@ namespace QuoridorApp.ViewModels
     class BotViewModel
     {
         const int SIZE = 9;
-        const int INF = (int)1e9;
+        const int INF = (int)1e8;
         //const int MAX_DEPTH = 3;
         int MAX_DEPTH;
 
         static int counter = 1;
 
+
+        public static int GetBotRating(string botName)
+        {
+            switch(botName)
+            {
+                case "EasyBot":
+                    return 1300;
+                case "MediumBot":
+                    return 1600;
+                case "HardBot":
+                    return 1900;
+                default:
+                    return -1;
+            }
+        }
         public BotViewModel(string botType)
         {
             MAX_DEPTH = 1;
@@ -97,8 +112,12 @@ namespace QuoridorApp.ViewModels
          */
         public double evaluate(BoardViewModel board, int player)
         {
+            int add = 0;
             if (won(board, player)) return INF;
             if (lost(board, player)) return -INF;
+            if (won(board, player)) add = INF;
+            if (lost(board, player)) add = -INF;
+
             int myDist = DistToWin(board, player);
             if (myDist <= 1) return INF;
             int hisDist = DistToWin(board, 1 - player);
@@ -108,7 +127,7 @@ namespace QuoridorApp.ViewModels
 
             const int COEF1 = 1;
             const int COEF2 = 1;
-            return (hisDist - myDist) * COEF1 + (myBlocks - hisBlocks) * COEF2;
+            return (hisDist - myDist) * COEF1 + (myBlocks - hisBlocks) * COEF2 + add;
         }
 
         /*
@@ -132,7 +151,7 @@ namespace QuoridorApp.ViewModels
             int bestX = -1;
             int bestY = -1;
             int cntBest = 0;
-            double bestEval = -INF - 1;
+            double bestEval = -2*INF - 1;
             for (int i = 0; i < SIZE; i++)
             {
                 for (int j = 0; j < SIZE; j++)
@@ -204,7 +223,7 @@ namespace QuoridorApp.ViewModels
             }
             int bestX = -1;
             int bestY = -1;
-            double bestEval = -INF - 1;
+            double bestEval = -2 * INF - 1;
             int cntBest = 0;
             for (int i = 0; i < SIZE - 1; i++)
             {
@@ -276,7 +295,7 @@ namespace QuoridorApp.ViewModels
 
             int bestX = -1;
             int bestY = -1;
-            double bestEval = -INF - 1;
+            double bestEval = -2 * INF - 1;
             int cntBest = 0;
             for (int i = 0; i < SIZE - 1; i++)
             {

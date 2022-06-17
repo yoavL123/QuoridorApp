@@ -30,6 +30,48 @@ namespace QuoridorApp.Models
             
             
         }
+        static double ProbabilityToWin(double rating1, double rating2)
+        {
+            return 1.0 * 1.0 / (1 + 1.0f *
+                   (double)(Math.Pow(10, 1.0f *
+                     (rating1 - rating2) / 400)));
+        }
+
+        // Function to calculate Elo rating
+        // K is a constant.
+        // d determines whether Player A wins or
+        // Player B.
+        static int EloRating(double Ra, double Rb, int K, bool d)
+        {
+
+            // To calculate the Winning
+            // Probability of Player B
+            double Pb = ProbabilityToWin(Ra, Rb);
+
+            // To calculate the Winning
+            // Probability of Player A
+            double Pa = ProbabilityToWin(Rb, Ra);
+
+            // Case -1 When Player A wins
+            // Updating the Elo Ratings
+            if (d == true)
+            {
+                Ra = Ra + K * (1 - Pa);
+                Rb = Rb + K * (0 - Pb);
+            }
+
+            // Case -2 When Player B wins
+            // Updating the Elo Ratings
+            else
+            {
+                Ra = Ra + K * (0 - Pa);
+                Rb = Rb + K * (1 - Pb);
+            }
+
+            return (int)Ra;
+        }
+
+
         public int CalcRatingChange()
         {
             return 10;

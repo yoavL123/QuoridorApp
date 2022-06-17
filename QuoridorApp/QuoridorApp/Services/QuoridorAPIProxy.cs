@@ -158,7 +158,35 @@ namespace QuoridorApp.Services
             }
         }
 
-
+        /*
+        public async Task<Player> GetPlayer(string userName)
+        {
+            try
+            {
+                HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/SignInPlayer?userName={userName}");
+                if (response.IsSuccessStatusCode)
+                {
+                    JsonSerializerOptions options = new JsonSerializerOptions
+                    {
+                        ReferenceHandler = ReferenceHandler.Preserve, //avoid reference loops!
+                        PropertyNameCaseInsensitive = true
+                    };
+                    string content = await response.Content.ReadAsStringAsync();
+                    Player p = JsonSerializer.Deserialize<Player>(content, options);
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+        */
         public async void UpdateRatingChange(RatingChange ratingChange)
         {
             try
@@ -187,7 +215,7 @@ namespace QuoridorApp.Services
         {
             try
             {
-                HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/GetLastRatingChange?playerId={p.PlayerId}");
+                HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/GetLastRatingChange?playerId={p.PlayerId}").ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
                     JsonSerializerOptions options = new JsonSerializerOptions
@@ -208,8 +236,8 @@ namespace QuoridorApp.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                await Application.Current.MainPage.DisplayAlert($"Error: {e.Message}", "ok", "ok2");
+                //Console.WriteLine(e.Message);
+                //await Application.Current.MainPage.DisplayAlert($"Error: {e.Message}", "ok", "ok2");
                 return null;
             }
         }
