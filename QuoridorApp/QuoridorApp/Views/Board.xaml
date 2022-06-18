@@ -10,6 +10,7 @@
         <local:BoardViewModel></local:BoardViewModel>
     </ContentPage.BindingContext>
     -->
+    
     <ContentPage.Resources>
         <Style x:Key="SignUpStack" TargetType="StackLayout">
             <Setter Property="Orientation" Value="Vertical"/>
@@ -24,13 +25,22 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Margin="2">
             <Label Text="Player 1" Style="{DynamicResource titleLabelStyle}" BackgroundColor="DarkBlue"></Label>
+            
+            <Label Text="{Binding blocksLeft[0], StringFormat='Blocks Left: {0}'}" Style="{DynamicResource labelStyle}"
+                   FontSize="Large" TextColor="DarkBlue"/>
             <!-- Here, background color sets only the color of the board, so it sets those spaces which is very nice -->
+            
             <AbsoluteLayout BackgroundColor="DarkRed" x:Name="theBoard" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
             </AbsoluteLayout>
+            
+            <Label Text="{Binding blocksLeft[1], StringFormat='Blocks Left: {0}'}" Style="{DynamicResource labelStyle}"
+                   FontSize="Large" TextColor="Gray"/>
+
+
             <Label Text="Player 2" Style="{DynamicResource titleLabelStyle}" BackgroundColor="Gray"></Label>
-           <!--<Button Command="{Binding SubmitSignUpCommand}" Text="Sign Up!" Style="{DynamicResource buttonStyle}" /> -->
+            <!--<Button Command="{Binding SubmitSignUpCommand}" Text="Sign Up!" Style="{DynamicResource buttonStyle}" /> -->
             <!--<Button Text="To Rating Changes" x:Name="ToRatingChangesBtn" IsVisible="False"/>-->
             <AbsoluteLayout x:Name="ratingChangesButton" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
             </AbsoluteLayout>

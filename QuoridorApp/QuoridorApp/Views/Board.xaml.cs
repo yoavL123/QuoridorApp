@@ -27,10 +27,16 @@ namespace QuoridorApp.Views
     {
 
         BoardViewModel vm;
+        /*
         public const double PAWN_TILE_SIZE = 60;
         public const double BLOCK_TILE_SMALL = 15;
         public const double BLOCK_TILE_BIG = 60;
+        
+        */
 
+        public const double PAWN_TILE_SIZE = 60;
+        public const double BLOCK_TILE_SMALL = 15;
+        public const double BLOCK_TILE_BIG = 60;
         private const int SLEEP_TIME_MILISECONDS = 200;
 
         public const int SIZE = 9;
@@ -54,12 +60,9 @@ namespace QuoridorApp.Views
             hasFinished = false;
             playersType = new string[] { type1, type2 };
             InitializeComponent();
-            //vm = new BoardViewModel(theBoard);
-            //BindingContext = vm;
-
-            vm = new BoardViewModel();
-            BindingContext = vm;
-
+            
+            
+            
 
 
             pawnBoard = new PawnTile[SIZE, SIZE];
@@ -129,7 +132,8 @@ namespace QuoridorApp.Views
                 }
                 
             }
-            
+            vm = new BoardViewModel();
+            BindingContext = vm;
             //DisplayBoard();
 
             //HandleGame();
@@ -175,8 +179,7 @@ namespace QuoridorApp.Views
             Button toRatingChangesBtn = new Button
             {
                 Text = "Player " + winnerIndex + " won!\n" + "To Rating Changes",
-                VerticalOptions = LayoutOptions.CenterAndExpand,
-                HorizontalOptions = LayoutOptions.Center,
+                
                 BackgroundColor = Color.BurlyWood,
                 
             };
@@ -195,7 +198,7 @@ namespace QuoridorApp.Views
             //toRatingChangesBtn.Clicked += BoardViewModel.OnToRatingChangeCommand();
             Device.BeginInvokeOnMainThread(() => {
                 ratingChangesButton.Children.Add(toRatingChangesBtn);
-                Rectangle buttonBounds = new Rectangle(0, 0, 300, 200);
+                Rectangle buttonBounds = new Rectangle(0, 0, 200, 50);
 
                 AbsoluteLayout.SetLayoutBounds(toRatingChangesBtn, buttonBounds); // Add the button to the absolute layout in the view
             });
@@ -223,6 +226,12 @@ namespace QuoridorApp.Views
                 await bot.MakeMove(nboard);
                 
                 vm = nboard;
+                
+                Device.BeginInvokeOnMainThread(() => {
+                    BindingContext = vm;
+
+                });
+                
                 //HandleGame();
                 DisplayBoard();
                 //if(BoardViewModel.isBot(playersType[vm.curPlayer])) Task.Run(() => HandleGame());

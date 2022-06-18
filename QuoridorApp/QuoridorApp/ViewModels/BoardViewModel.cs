@@ -2,6 +2,7 @@
 using QuoridorApp.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -32,8 +33,31 @@ namespace QuoridorApp.ViewModels
         public string[,] verBlockBoard; // {"Empty", "Player1", "Player2"}
         public string[,] centerBlocked; // {"Empty", "Player1", "Player2"}
         public int[][] playerLoc; // [player index][{0 - (col - left / right), 1 - (row - up / down)}]
-        public int[] blocksLeft;
 
+        //public int[] blocksLeft;
+
+        private ObservableCollection<int> blocksLeftP;
+        public ObservableCollection<int> blocksLeft
+        {
+            get => blocksLeftP;
+            private set
+            {
+                blocksLeftP = value;
+                OnPropertyChanged("blocksLeft");
+            }
+        }
+        /*
+        public int[] blocksLeft;
+        
+        public int[] blocksLeft
+        {
+            get => blocksLeft;
+            set
+            {
+                blocksLeft = value;
+            }
+        }
+        */
         public string blockStatus; // current state of blocks
 
         public int curPlayer;
@@ -65,7 +89,8 @@ namespace QuoridorApp.ViewModels
             centerBlocked = new string[SIZE - 1, SIZE - 1];
             playerLoc = new int[][] { new int[] { b.playerLoc[0][0], b.playerLoc[0][1] }, new int[] { b.playerLoc[1][0], b.playerLoc[1][1] } };
             //playerLoc = new int[][] { new int[] { b.playerLoc[0][0], b.playerLoc[1][0] }, new int[] { b.playerLoc[0][1], b.playerLoc[1][1] } };
-            Copy1D<int>(ref blocksLeft, b.blocksLeft);
+            //Copy1D<int>(ref blocksLeft, b.blocksLeft);
+            blocksLeft = new ObservableCollection<int> { b.blocksLeft[0], b.blocksLeft[1] };
             blockStatus = b.blockStatus;
             curPlayer = b.curPlayer;
 
@@ -73,6 +98,7 @@ namespace QuoridorApp.ViewModels
             Copy2D<string>(ref verBlockBoard, b.verBlockBoard);
             Copy2D<string>(ref centerBlocked, b.centerBlocked);
         }
+
 
         /*
         #region Go To Rating Change
@@ -93,7 +119,8 @@ namespace QuoridorApp.ViewModels
             centerBlocked = new string[SIZE - 1, SIZE - 1];
             //playerLoc = playerStartLoc;
             playerLoc = new int[][] { new int[] { playerStartLoc[0][0], playerStartLoc[0][1] }, new int[] { playerStartLoc[1][0], playerStartLoc[1][1] } };
-            blocksLeft = new int[] { BLOCKS_NUM, BLOCKS_NUM };
+            //blocksLeft = new int[] { BLOCKS_NUM, BLOCKS_NUM };
+            blocksLeft = new ObservableCollection<int> { BLOCKS_NUM, BLOCKS_NUM };
             blockStatus = "Empty";
             curPlayer = 0;
 
