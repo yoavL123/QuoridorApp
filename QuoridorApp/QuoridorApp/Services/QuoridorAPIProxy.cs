@@ -158,12 +158,12 @@ namespace QuoridorApp.Services
             }
         }
 
-        /*
+        
         public async Task<Player> GetPlayer(string userName)
         {
             try
             {
-                HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/SignInPlayer?userName={userName}");
+                HttpResponseMessage response = await this.client.GetAsync($"{this.baseUri}/GetPlayer?userName={userName}");
                 if (response.IsSuccessStatusCode)
                 {
                     JsonSerializerOptions options = new JsonSerializerOptions
@@ -182,11 +182,11 @@ namespace QuoridorApp.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                //Console.WriteLine(e.Message);
                 return null;
             }
         }
-        */
+        
         public async Task UpdateRatingChange(RatingChange ratingChange)
         {
             try

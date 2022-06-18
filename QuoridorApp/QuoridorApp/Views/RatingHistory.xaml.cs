@@ -20,6 +20,7 @@ namespace QuoridorApp.Views
             InitializeComponent();
             RatingHistoryViewModel vm = new RatingHistoryViewModel();
             BindingContext = vm;
+            
         }
 
 

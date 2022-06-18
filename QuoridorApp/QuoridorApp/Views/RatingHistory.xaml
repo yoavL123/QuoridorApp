@@ -5,29 +5,30 @@
              x:Class="QuoridorApp.Views.RatingHistory"
              Style="{DynamicResource pageStyle}">
 
-    <ContentPage.BindingContext>
-        <local:RatingHistoryViewModel />
-    </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Rating Hisroty" Style="{DynamicResource titleLabelStyle}"/>
+            <Label Text="Rating History" Style="{DynamicResource titleLabelStyle}"/>
             <CollectionView ItemsSource="{Binding RatingData}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid ColumnDefinitions="*, *">
-                            <Label Grid.Column="0"
-                                Text="{Binding RatingChangeDate, StringFormat='Date is: {0}'}"
+                        <Grid ColumnDefinitions="*, *" Style="{DynamicResource gridStyle}">
+                            <Frame Style="{DynamicResource frameStyle}" Grid.Column="0">
+                                <Label Style="{DynamicResource labelStyle}"
+                                Text="{Binding RatingChangeDate, StringFormat='Game Date: {0}'}"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center" />
-                            <Label Grid.Column="1"
-                                Text="{Binding AlteredRating, StringFormat='New rating is: {0}'}"
+                            </Frame>
+                            <Frame Style="{DynamicResource frameStyle}" Grid.Column="1">
+                                <Label Style="{DynamicResource labelStyle}"
+                                Text="{Binding AlteredRating, StringFormat='{0}'}"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center" />
+                            </Frame>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>
-                    <Label Text="No Games Played"/>
+                    <Label Text="No Games Played" Style="{DynamicResource titleLabelStyle}"/>
                 </CollectionView.EmptyView>
             </CollectionView>
             <Button Text="Back To Profile Page" Command="{Binding ToProfileCommand}" Style="{DynamicResource buttonStyle}" />

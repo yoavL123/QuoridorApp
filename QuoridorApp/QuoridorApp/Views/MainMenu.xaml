@@ -12,14 +12,14 @@
         
         <StackLayout>
             
-            <Label Text="Main Menu" Style="{StaticResource labelStyle}"
+            <Label Text="Main Menu" Style="{DynamicResource titleLabelStyle}"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
 
-            <Label Text="{Binding UserName, StringFormat='Welcome {0}!'}"
+            <Label Text="{Binding UserName, StringFormat='Welcome {0}'}"
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="CenterAndExpand"
-                   Style="{DynamicResource labelStyle}"/>
+                   Style="{DynamicResource titleLabelStyle}"/>
             <!--<Button Text="Go To Board" Style="{DynamicResource buttonStyle}" Command="{Binding ToBoardCommand}" /> -->
             <Button Text="Custom Game" Style="{DynamicResource buttonStyle}" Command="{Binding ToBoardBotCommand}" />
             <Button Text="Go To Profile Page" Style="{DynamicResource buttonStyle}" Command="{Binding ToProfileCommand}" />

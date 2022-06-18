@@ -7,6 +7,7 @@ using Xamarin.Forms;
 using QuoridorApp.Views;
 using QuoridorApp.Services;
 using QuoridorApp.Models;
+using System.Threading.Tasks;
 
 namespace QuoridorApp.ViewModels
 {
@@ -101,8 +102,64 @@ namespace QuoridorApp.ViewModels
         Currently not really signing up
         TODO: add exceptions
         */
+
+        private bool IsValidUserName(string s)
+        {
+            string[] banned = new string[] { "Me", "Guest", "Player", "EasyBot", "MediumBot", "HardBot", "Bot" };
+            foreach (var v in banned)
+            {
+                if (s == v) return false;
+            }
+            return true;
+        }
+
+        private async Task<bool> ValidateAsync()
+        {
+            string msg = " cannot be empty";
+            if (String.IsNullOrEmpty(Email))
+            {
+                await Application.Current.MainPage.DisplayAlert($"Email" + msg, "", "ok");
+                return false;
+            }
+            if (String.IsNullOrEmpty(UserName))
+            {
+                await Application.Current.MainPage.DisplayAlert($"User Name" + msg, "", "ok");
+                return false;
+            }
+            if (String.IsNullOrEmpty(FirstName))
+            {
+                await Application.Current.MainPage.DisplayAlert($"First Name" + msg, "", "ok");
+                return false;
+            }
+            if (String.IsNullOrEmpty(LastName))
+            {
+                await Application.Current.MainPage.DisplayAlert($"Last Name" + msg, "", "ok");
+                return false;
+            }
+            if (String.IsNullOrEmpty(PlayerPass))
+            {
+                await Application.Current.MainPage.DisplayAlert($"Password" + msg, "", "ok");
+                return false;
+            }
+
+
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            Player p = await proxy.GetPlayer(UserName);
+            if (p != null)
+            {
+                await Application.Current.MainPage.DisplayAlert($"User Name is already taken", "", "ok");
+                return false;
+            }
+            if(!IsValidUserName(UserName))
+            {
+                await Application.Current.MainPage.DisplayAlert($"Invalid User Name", "", "ok");
+                return false;
+            }
+            return true;
+        }
         public async void OnSubmitSignUpCommand()
         {
+            if (!(await ValidateAsync())) return;
             QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
             Player player = new Player
             {

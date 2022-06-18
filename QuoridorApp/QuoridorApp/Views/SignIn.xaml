@@ -13,18 +13,19 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Back to main page" Command="{Binding ToStartPageCommand}" Style="{DynamicResource buttonStyle}" />
+            
             <Label Text="Sign In"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand"
-                   Style="{DynamicResource labelStyle}"/>
+                   Style="{DynamicResource titleLabelStyle}"/>
             <Frame>
                 <StackLayout>
                     <Entry x:Name="UserName" Text="{Binding UserName}" Placeholder="Enter username..." Style="{DynamicResource entryStyle}" />
                     <Entry x:Name="PlayerPass" Text="{Binding PlayerPass}" Placeholder="Enter password..."  Style="{DynamicResource entryStyle}"/>
                 </StackLayout>
             </Frame>
-            <Button Command="{Binding SubmitSignInCommand}" Text="Sign In!" Style="{DynamicResource buttonStyle}" />
+            <Button Command="{Binding SubmitSignInCommand}" Text="Sign In" Style="{DynamicResource buttonStyle}" />
+            <Button Text="Back To Main Page" Command="{Binding ToStartPageCommand}" Style="{DynamicResource buttonStyle}" />
         </StackLayout>
 
 

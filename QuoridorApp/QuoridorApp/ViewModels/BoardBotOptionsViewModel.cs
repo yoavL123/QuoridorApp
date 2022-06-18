@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -38,8 +39,24 @@ namespace QuoridorApp.ViewModels
         public ICommand SubmitBoardBotOptionsCommand => new Command(OnSubmitBoardBotOptionsCommand);
 
 
+        private async Task<bool> ValidateAsync()
+        {
+            if(String.IsNullOrEmpty(Type1))
+            {
+                await Application.Current.MainPage.DisplayAlert($"Choose the type of the first player", "", "ok");
+                return false;
+            }
+            if (String.IsNullOrEmpty(Type2))
+            {
+                await Application.Current.MainPage.DisplayAlert($"Choose the type of the second player", "", "ok");
+                return false;
+            }
+            return true;
+        }
+
         public async void OnSubmitBoardBotOptionsCommand()
         {
+            if (!(await ValidateAsync())) return;
             Page page = new Views.Board(Type1, Type2);
             await App.Current.MainPage.Navigation.PushAsync(page);
         }

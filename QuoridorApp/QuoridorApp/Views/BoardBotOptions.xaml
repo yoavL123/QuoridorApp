@@ -7,24 +7,25 @@
     <ContentPage.Content>
         <StackLayout>
 
-            <Label Text="Select options the types of the first and second player:"
+            <Label Text="Custom Game" Style="{DynamicResource titleLabelStyle}"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
-            <Label Text="Select the type of the first player:" />
-            <Grid RadioButtonGroup.GroupName="Type1" RadioButtonGroup.SelectedValue="{Binding Type1}">
-                <RadioButton Content="Me" Value="Me" Grid.Row="0" Grid.Column="0"/>
-                <RadioButton Content="Guest" Value="Guest" Grid.Row="0" Grid.Column="1"/>
-                <RadioButton Content="Easy Bot" Value="EasyBot" Grid.Row="0" Grid.Column="2"/>
-                <RadioButton Content="Medium Bot" Value="MediumBot" Grid.Row="0" Grid.Column="3"/>
-                <RadioButton Content="Hard Bot" Value="HardBot" Grid.Row="0" Grid.Column="4"/>
+            <Label Text="Select the type of the first player:" Style="{DynamicResource titleLabelStyle}"/>
+            <Grid RadioButtonGroup.GroupName="Type1" Style="{DynamicResource gridStyle}" RadioButtonGroup.SelectedValue="{Binding Type1}">
+                
+                <RadioButton Content="Me" Value="Me" Grid.Row="0" Grid.Column="0" Style="{DynamicResource radioButtonStyle}"/>
+                <RadioButton Content="Guest" Value="Guest" Grid.Row="0" Grid.Column="1" Style="{DynamicResource radioButtonStyle}"/>
+                <RadioButton Content="Easy Bot (1500)" Value="EasyBot" Grid.Row="0" Grid.Column="2" Style="{DynamicResource radioButtonStyle}"/>
+                <RadioButton Content="Medium Bot (1800)" Value="MediumBot" Grid.Row="0" Grid.Column="3" Style="{DynamicResource radioButtonStyle}"/>
+                <RadioButton Content="Hard Bot (2000)" Value="HardBot" Grid.Row="0" Grid.Column="4" Style="{DynamicResource radioButtonStyle}"/>
             </Grid>
-            <Label Text="Select the type of the second player:" />
-            <Grid RadioButtonGroup.GroupName="Type2" RadioButtonGroup.SelectedValue="{Binding Type2}">
-                <RadioButton Content="Me" Value="Me" Grid.Row="0" Grid.Column="0"/>
-                <RadioButton Content="Guest" Value="Guest" Grid.Row="0" Grid.Column="1"/>
-                <RadioButton Content="Easy Bot" Value="EasyBot" Grid.Row="0" Grid.Column="2"/>
-                <RadioButton Content="Medium Bot" Value="MediumBot" Grid.Row="0" Grid.Column="3"/>
-                <RadioButton Content="Hard Bot" Value="HardBot" Grid.Row="0" Grid.Column="4"/>
+            <Label Text="Select the type of the second player:" Style="{DynamicResource titleLabelStyle}"/>
+            <Grid RadioButtonGroup.GroupName="Type2" Style="{DynamicResource gridStyle}" RadioButtonGroup.SelectedValue="{Binding Type2}">
+                <RadioButton Content="Me" Value="Me" Grid.Row="0" Grid.Column="0" Style="{DynamicResource radioButtonStyle}"/>
+                <RadioButton Content="Guest" Value="Guest" Grid.Row="0" Grid.Column="1" Style="{DynamicResource radioButtonStyle}"/>
+                <RadioButton Content="Easy Bot (1500)" Value="EasyBot" Grid.Row="0" Grid.Column="2" Style="{DynamicResource radioButtonStyle}"/>
+                <RadioButton Content="Medium Bot (1800)" Value="MediumBot" Grid.Row="0" Grid.Column="3" Style="{DynamicResource radioButtonStyle}"/>
+                <RadioButton Content="Hard Bot (2000)" Value="HardBot" Grid.Row="0" Grid.Column="4" Style="{DynamicResource radioButtonStyle}"/>
             </Grid>
             
 

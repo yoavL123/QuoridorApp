@@ -7,32 +7,66 @@
     
     <ContentPage.Content>
         <StackLayout>
-            
-            <Label Text="Winner:"/>
-            
-            <Label Text="{Binding Winner}"/>
-            <Label>
-                <Label.Text>
-                    <MultiBinding StringFormat="{}{0} ---> {1}">
-                        <Binding Path="WinnerInitRating" />
-                        <Binding Path="WinnerUpdatedRating" />
-                    </MultiBinding>
-                </Label.Text>
-            </Label>
-            
-            <!--
+            <!--<RadioButton Content="Me" Value="Me" Grid.Row="0" Grid.Column="0" Style="{DynamicResource radioButtonStyle}"/>-->
+            <Label Text="Rating Changes:" FontSize="Header" TextColor="BurlyWood" HorizontalOptions="CenterAndExpand"/>
+            <Grid Style="{DynamicResource gridStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" WidthRequest="700">
+                <Frame Style="{DynamicResource frameStyle}" Grid.Row="0" Grid.Column="0">
+                    <Label Text="Winner:" Style="{DynamicResource labelStyle}"/>
+                </Frame>
+                <Frame Style="{DynamicResource frameStyle}" Grid.Row="0" Grid.Column="1">
+                    <Label Text="{Binding Winner}" Style="{DynamicResource labelStyle}" />
+                </Frame>
+
+                <Frame Style="{DynamicResource frameStyle}" Grid.Row="1" Grid.Column="0">
+                    <Label Text="Rating Change:" Style="{DynamicResource labelStyle}"/>
+                </Frame>
+
+
+                <Frame Style="{DynamicResource frameStyle}" Grid.Row="1" Grid.Column="1">
+                    <Label  Style="{DynamicResource labelStyle}">
+                        <Label.Text>
+                            <MultiBinding StringFormat="{}{0} ---> {1}">
+                                <Binding Path="WinnerInitRating" />
+                                <Binding Path="WinnerUpdatedRating" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Frame>
+                
+                
+
+                <!--
             <Label Text="{Binding WinnerInitRating}"/>
             <Label Text="{Binding WinnerUpdateRating}"/> -->
-            <Label Text="Loser:"/>
-            <Label Text="{Binding Loser}"/>
-            <Label>
-                <Label.Text>
-                    <MultiBinding StringFormat="{}{0} ---> {1}">
-                        <Binding Path="LoserInitRating" />
-                        <Binding Path="LoserUpdatedRating" />
-                    </MultiBinding>
-                </Label.Text>
-            </Label>
+                <Frame Style="{DynamicResource frameStyle}" Grid.Row="2" Grid.Column="0">
+                    <Label Text="Loser:" Style="{DynamicResource labelStyle}"/>
+                </Frame>
+
+                <Frame Style="{DynamicResource frameStyle}" Grid.Row="2" Grid.Column="1">
+                    <Label Text="{Binding Loser}" Style="{DynamicResource labelStyle}"/>
+                </Frame>
+
+                <Frame Style="{DynamicResource frameStyle}" Grid.Row="3" Grid.Column="0">
+                    <Label Text="Rating Change:" Style="{DynamicResource labelStyle}"/>
+                </Frame>
+
+
+                <Frame Style="{DynamicResource frameStyle}" Grid.Row="3" Grid.Column="1">
+                    <Label Style="{DynamicResource labelStyle}">
+                        <Label.Text>
+                            <MultiBinding StringFormat="{}{0} ---> {1}">
+                                <Binding Path="LoserInitRating" />
+                                <Binding Path="LoserUpdatedRating" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Frame>
+
+
+                
+
+            </Grid>
+            
             
             <!--
             <Label Text="{Binding LoserInitRating}"/>

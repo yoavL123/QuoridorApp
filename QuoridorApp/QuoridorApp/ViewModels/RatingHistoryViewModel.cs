@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using System.Windows;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Linq;
 //using Xamarin.contro
 
 namespace QuoridorApp.ViewModels
@@ -46,11 +47,18 @@ namespace QuoridorApp.ViewModels
         {
             QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
             var data = await proxy.GetRatingChanges(CurrentApp.CurrentPlayer);
-            if (data != null)
+            data = data.Distinct().ToList();
+            if (data != null  && RatingData.Count() == 0)
             {
                 RatingData.Clear();
-                data.ForEach(item => RatingData.Add(item));
+                //data.ForEach(item => RatingData.Add(item));
+                for(int i = data.Count() - 1; i >= 0; i--)
+                {
+                    RatingData.Add(data[i]);
+                    
+                }
             }
+            //RatingData = (ObservableCollection<RatingChange>)RatingData.Reverse();
         }
 
         /*

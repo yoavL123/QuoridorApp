@@ -14,7 +14,7 @@ namespace QuoridorApp.ViewModels
         int MAX_DEPTH;
 
         static int counter = 1;
-
+        bool isHardBot;
 
         public static int GetBotRating(string botName)
         {
@@ -25,7 +25,7 @@ namespace QuoridorApp.ViewModels
                 case "MediumBot":
                     return 1800;
                 case "HardBot":
-                    return 2100;
+                    return 2000;
                 default:
                     return -1;
             }
@@ -33,9 +33,13 @@ namespace QuoridorApp.ViewModels
         public BotViewModel(string botType)
         {
             MAX_DEPTH = 1;
+            isHardBot = false;
             if (botType == "EasyBot") MAX_DEPTH = 1;
             if (botType == "MediumBot") MAX_DEPTH = 2;
-            if (botType == "HardBot") MAX_DEPTH = 3;
+            if (botType == "HardBot") {
+                MAX_DEPTH = 2;
+                isHardBot = true;
+            }
         }
 
 
@@ -112,6 +116,7 @@ namespace QuoridorApp.ViewModels
          */
         public double evaluate(BoardViewModel board, int player)
         {
+            if (isHardBot) return evaluateHardbot(board, player);
             int add = 0;
             if (won(board, player)) return INF;
             if (lost(board, player)) return -INF;
@@ -127,6 +132,28 @@ namespace QuoridorApp.ViewModels
 
             const int COEF1 = 1;
             const int COEF2 = 1;
+            return (hisDist - myDist) * COEF1 + (myBlocks - hisBlocks) * COEF2 + add;
+        }
+
+        public double evaluateHardbot(BoardViewModel board, int player)
+        {
+            double add = 0;
+            if (won(board, player)) return INF;
+            if (lost(board, player)) return -INF;
+            if (won(board, player)) add = INF;
+            if (lost(board, player)) add = -INF;
+
+            int myDist = DistToWin(board, player);
+            if (myDist <= 1) return INF;
+            int hisDist = DistToWin(board, 1 - player);
+
+            int myBlocks = board.blocksLeft[player];
+            int hisBlocks = board.blocksLeft[1 - player];
+
+            const int COEF1 = 1;
+            const int COEF2 = 1;
+            if (hisDist == 1) add -= 0.3;
+            if (myDist == 1) add += 0.3;
             return (hisDist - myDist) * COEF1 + (myBlocks - hisBlocks) * COEF2 + add;
         }
 
@@ -158,9 +185,9 @@ namespace QuoridorApp.ViewModels
             int bestY = -1;
             int cntBest = 0;
             double bestEval = -2*INF - 1;
-            for (int i = startX; i <= endX; i++) // CHECKKKKKKKKKKKKKKKKKKKKKK
+            for (int i = startX; i <= endX; i++)
             {
-                for (int j = startY; j <= endY; j++) // CHECKKKKKKKKKKKKKKKKKKKKKK
+                for (int j = startY; j <= endY; j++)
                 {
 
                     if (board.CanMove(i, j))

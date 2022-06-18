@@ -12,12 +12,15 @@
     <ContentPage.Resources>
     </ContentPage.Resources>
     <ContentPage.Content>
-        
-        <StackLayout>
+
+        <StackLayout Style="{DynamicResource stackLayoutStyle}">
             <Label Text="Quoridor" Style="{StaticResource titleLabelStyle}" />
             <!--<Label Text="Quoridor"  Style="{StaticResource StandardLabelStyle}"/> -->
-            <Button Text="Sign In" Command="{Binding ToSignInCommand}" Style="{DynamicResource buttonStyle}"/>
-            <Button Text="Sign Up" Command="{Binding ToSignUpCommand}" Style="{DynamicResource buttonStyle}" />
+            <StackLayout VerticalOptions="CenterAndExpand" Spacing="30">
+                <Button Text="Sign In" Command="{Binding ToSignInCommand}" Style="{DynamicResource buttonStyle}"/>
+                <Button Text="Sign Up" Command="{Binding ToSignUpCommand}" Style="{DynamicResource buttonStyle}"/>
+            </StackLayout>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -31,7 +31,7 @@ namespace QuoridorApp.Views
         public const double BLOCK_TILE_SMALL = 15;
         public const double BLOCK_TILE_BIG = 60;
 
-        private const int SLEEP_TIME_MILISECONDS = 500;
+        private const int SLEEP_TIME_MILISECONDS = 200;
 
         public const int SIZE = 9;
 

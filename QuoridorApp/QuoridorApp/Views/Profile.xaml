@@ -14,7 +14,7 @@
             <Label Text="{Binding UserName, StringFormat='Handle: {0}'}"
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="CenterAndExpand"
-                   Style="{DynamicResource labelStyle}"/>
+                   Style="{DynamicResource titleLabelStyle}"/>
             <!--
             <Label Text="{Binding , StringFormat='Level: {0}'}"
                 VerticalOptions="CenterAndExpand"

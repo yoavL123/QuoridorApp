@@ -255,6 +255,14 @@ namespace QuoridorApp.ViewModels
             LoserUpdatedRating = GetRating(Loser);
         }
         */
+
+        private string FixName(string userName)
+        {
+            if (userName == "EasyBot") return "Easy Bot";
+            if (userName == "MediumBot") return "Medium Bot";
+            if (userName == "HardBot") return "Hard Bot";
+            return userName;
+        }
         
         public RatingChangePageViewModel(string winnerPlayer, string loserPlayer, int[][] ratingChangeArr)
         {
@@ -265,6 +273,9 @@ namespace QuoridorApp.ViewModels
             WinnerUpdatedRating = ratingChangeArr[0][1];
             LoserInitRating = ratingChangeArr[1][0];
             LoserUpdatedRating = ratingChangeArr[1][1];
+
+            Winner = FixName(Winner);
+            Loser = FixName(Loser);
             //Task.Run(async () => await InitializeRatings());
             //InitializeRatings();
         }

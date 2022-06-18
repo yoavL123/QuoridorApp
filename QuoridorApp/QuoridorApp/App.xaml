@@ -7,6 +7,23 @@
     <Application.Resources>
         <!-- style resources for the whole project-->
         <ResourceDictionary>
+            
+            <Style x:Key="stackLayoutStyle" TargetType="StackLayout">
+                <Setter Property="Spacing" Value="20"/>
+            </Style>
+            <Style x:Key="gridStyle" TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="BurlyWood"/>
+                <!--<Setter Property="RowSpacing" Value="5"/>-->
+                <!--<Setter Property="ColumnSpacing" Value="5"/>-->
+            </Style>
+
+            <Style x:Key="radioButtonStyle" TargetType="RadioButton">
+                <Setter Property="BorderColor" Value="Brown"/>
+                <Setter Property="BorderWidth" Value="4"/>
+                <!--<Setter Property="BackgroundColor" Value="Bisque"/>-->
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontSize" Value="Large"/>
+            </Style>
             <Style x:Key="entryStyle" TargetType="Entry">
                 <Setter Property="FontSize" Value="Medium">
                 </Setter>
@@ -17,21 +34,38 @@
                 <Setter Property="BackgroundColor" Value="DarkSlateGray"/>
             </Style>
             <Style x:Key="labelStyle" TargetType="Label">
-                <Setter Property="TextColor" Value="MediumSeaGreen"/>
+                <Setter Property="TextColor" Value="Firebrick"/>
+                
                 <Setter Property="HorizontalOptions" Value="Center"/>
                 <Setter Property="FontSize" Value="Large"/>
             </Style>
+            <Style x:Key="frameStyle" TargetType="Frame">
+                <Setter Property="BorderColor" Value="Firebrick"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
             <Style x:Key="titleLabelStyle" TargetType="Label">
+                <!--
                 <Setter Property="FontSize" Value="Large"/>
                 <Setter Property="TextColor" Value="DarkOliveGreen"/>
                 <Setter Property="BackgroundColor" Value="Chocolate"/>
                 <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                -->
+                <Setter Property="TextColor" Value="BurlyWood"/>
+                <Setter Property="FontSize" Value="Header"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
                 <!--<Setter Property="HorizontalOptions" Value="Center"/> -->
 
             </Style>
             <Style x:Key="buttonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="BurlyWood"/>
                 <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="BorderColor" Value="Black"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="HeightRequest" Value="50"/>
+                <Setter Property="WidthRequest" Value="250"/>
+                
                 <!--<Setter Property="BackgroundColor" Value="DarkRed"/>-->
                 <Setter Property="BackgroundColor" Value="DarkRed"/>
             </Style>

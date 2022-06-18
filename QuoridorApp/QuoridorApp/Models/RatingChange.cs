@@ -67,8 +67,12 @@ namespace QuoridorApp.Models
                 Ra = Ra + K * (0 - Pa);
                 Rb = Rb + K * (1 - Pb);
             }
-
-            return (int)Ra;
+            if(Math.Abs(Ra) < 0.5)
+            {
+                if (Ra < 0) Ra = -1;
+                else Ra = 1;
+            }
+            return (int)Math.Round(Ra);
         }
 
 
