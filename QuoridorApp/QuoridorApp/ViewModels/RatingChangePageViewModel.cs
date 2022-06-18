@@ -242,8 +242,8 @@ namespace QuoridorApp.ViewModels
             //WinnerUpdatedRating = await GetRating(Winner);
             //LoserUpdatedRating = await GetRating(Loser);
         }
-        
 
+        
         /*
         private void InitializeRatings()
         {
@@ -256,13 +256,17 @@ namespace QuoridorApp.ViewModels
         }
         */
         
-        public RatingChangePageViewModel(string winnerPlayer, string loserPlayer)
+        public RatingChangePageViewModel(string winnerPlayer, string loserPlayer, int[][] ratingChangeArr)
         {
             Winner = winnerPlayer;
             Loser = loserPlayer;
 
+            WinnerInitRating = ratingChangeArr[0][0];
+            WinnerUpdatedRating = ratingChangeArr[0][1];
+            LoserInitRating = ratingChangeArr[1][0];
+            LoserUpdatedRating = ratingChangeArr[1][1];
             //Task.Run(async () => await InitializeRatings());
-            InitializeRatings();
+            //InitializeRatings();
         }
 
     }

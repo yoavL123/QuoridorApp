@@ -21,11 +21,11 @@ namespace QuoridorApp.ViewModels
             switch(botName)
             {
                 case "EasyBot":
-                    return 1300;
+                    return 1500;
                 case "MediumBot":
-                    return 1600;
+                    return 1800;
                 case "HardBot":
-                    return 1900;
+                    return 2100;
                 default:
                     return -1;
             }
@@ -148,13 +148,19 @@ namespace QuoridorApp.ViewModels
                 //board.curPlayer = 1 - board.curPlayer;
                 return new double[] { -1, -1, -INF };
             }
+            int curX = board.playerLoc[board.curPlayer][0];
+            int curY = board.playerLoc[board.curPlayer][1];
+            int startX = Math.Max(0, curX - 2);
+            int endX = Math.Min(SIZE - 1, curX + 2);
+            int startY = Math.Max(0, curY - 2);
+            int endY = Math.Min(SIZE - 1, curY + 2);
             int bestX = -1;
             int bestY = -1;
             int cntBest = 0;
             double bestEval = -2*INF - 1;
-            for (int i = 0; i < SIZE; i++)
+            for (int i = startX; i <= endX; i++) // CHECKKKKKKKKKKKKKKKKKKKKKK
             {
-                for (int j = 0; j < SIZE; j++)
+                for (int j = startY; j <= endY; j++) // CHECKKKKKKKKKKKKKKKKKKKKKK
                 {
 
                     if (board.CanMove(i, j))
@@ -353,9 +359,43 @@ namespace QuoridorApp.ViewModels
             return Math.Max(a, Math.Max(b, c));
         }
 
+        private bool CanMoveToWin(BoardViewModel board)
+        {
+            for (int i = 0; i < SIZE; i++)
+            {
+                for (int j = 0; j < SIZE; j++)
+                {
+                    if (!board.CanMove(i, j)) continue;
+                    if (board.CheckWonPos(board.curPlayer, j)) return true;
+                }
+            }
+            return false;
+        }
         public async Task<double> MakeMove(BoardViewModel board, int depth = 1)
         {
+            
             int player = board.curPlayer;
+            if(depth == 1)
+            {
+                if(CanMoveToWin(board))
+                {
+                    for (int i = 0; i < SIZE; i++)
+                    {
+                        for (int j = 0; j < SIZE; j++)
+                        {
+                            if (!board.CanMove(i, j)) continue;
+                            if (board.CheckWonPos(board.curPlayer, j))
+                            {
+                                board.Move(i, j);
+                                double eval = -evaluate(board, 1 - player);
+                                return eval;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            
             /*
             if (depth >= MAX_DEPTH)
             {

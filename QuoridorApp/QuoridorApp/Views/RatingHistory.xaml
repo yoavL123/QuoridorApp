@@ -27,7 +27,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>
-                    <Label Text="Donwloading"/>
+                    <Label Text="No Games Played"/>
                 </CollectionView.EmptyView>
             </CollectionView>
             <Button Text="Back To Profile Page" Command="{Binding ToProfileCommand}" Style="{DynamicResource buttonStyle}" />

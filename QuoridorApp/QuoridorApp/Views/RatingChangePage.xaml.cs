@@ -13,7 +13,7 @@ namespace QuoridorApp.Views
     public partial class RatingChangePage : ContentPage
     {
         RatingChangePageViewModel vm;
-        public RatingChangePage(string winner, string loser)
+        public RatingChangePage(string winner, string loser, int[][] ratingChangeArr)
         {
             //InitializeComponent(); // FOR SOME REASON THIS HAS TO COME FIRST
 
@@ -23,7 +23,7 @@ namespace QuoridorApp.Views
             //Task.Run(async () => BindingContext = await RatingChangePageViewModel.createViewModel(winner, loser));
             //Task.Run(async () => BindingContext = await RatingChangePageViewModel.createViewModel(winner, loser));
             //BindingContext = new RatingChangePageViewModel(winner, loser);
-            vm = new RatingChangePageViewModel(winner, loser);
+            vm = new RatingChangePageViewModel(winner, loser, ratingChangeArr);
             BindingContext = vm;
             //vm.InitializeRatings();
 

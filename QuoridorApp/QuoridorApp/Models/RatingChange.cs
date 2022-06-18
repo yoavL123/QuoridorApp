@@ -14,7 +14,7 @@ namespace QuoridorApp.Models
         public virtual Player RatingChangePlayer { get; set; }
 
 
-        public static int INITIAL_RATING = 1200;
+        public static int INITIAL_RATING = 1500;
         private static int K = 50;
         public RatingChange()
         {

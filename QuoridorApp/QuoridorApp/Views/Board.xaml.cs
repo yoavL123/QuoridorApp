@@ -31,7 +31,7 @@ namespace QuoridorApp.Views
         public const double BLOCK_TILE_SMALL = 15;
         public const double BLOCK_TILE_BIG = 60;
 
-        private const int SLEEP_TIME_MILISECONDS = 0;
+        private const int SLEEP_TIME_MILISECONDS = 500;
 
         public const int SIZE = 9;
 
@@ -39,6 +39,10 @@ namespace QuoridorApp.Views
         BlockTile[,] horBlockBoard;
         BlockTile[,] verBlockBoard;
         CenterTile[,] centerBlocked;
+
+        
+
+
 
         string[] playersType;
         bool hasFinished;
@@ -151,7 +155,7 @@ namespace QuoridorApp.Views
             */
         }
 
-        public void FinishGame()
+        public async Task FinishGame()
         {
             if (hasFinished) return;
             hasFinished = true;
@@ -179,13 +183,13 @@ namespace QuoridorApp.Views
             toRatingChangesBtn.IsVisible = true;
             //toRatingChangesBtn.Clicked += async (sender, args) => await label.RelRotateTo(360, 1000);
 
+
+            int[][] ratingChangeArr = await vm.FinishGameAsync(winnerPlayer, loserPlayer);
             
-
-
             //toRatingChangesBtn.Clicked += (sender, args) => BoardViewModel.OnToRatingChangeCommand();
             toRatingChangesBtn.Clicked += async (sender, args) =>
             {
-                Page p = new Views.RatingChangePage(winnerPlayer, loserPlayer);
+                Page p = new Views.RatingChangePage(winnerPlayer, loserPlayer, ratingChangeArr);
                 await App.Current.MainPage.Navigation.PushAsync(p);
             };
             //toRatingChangesBtn.Clicked += BoardViewModel.OnToRatingChangeCommand();
@@ -206,7 +210,7 @@ namespace QuoridorApp.Views
             DisplayBoard();
             if (vm.CheckWon())
             {
-                FinishGame();
+                await FinishGame();
                 return;
             }
 

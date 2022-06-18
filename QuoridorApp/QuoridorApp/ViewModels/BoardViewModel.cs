@@ -3,6 +3,7 @@ using QuoridorApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -135,7 +136,8 @@ namespace QuoridorApp.ViewModels
 
         public bool CheckWonPos(int player, int col)
         {
-            return playerLoc[player][1] == SIZE - 1 - playerStartLoc[player][1];
+            //return playerLoc[player][1] == SIZE - 1 - playerStartLoc[player][1];
+            return col == SIZE - 1 - playerStartLoc[player][1];
         }
 
         public bool CheckWon()
@@ -537,6 +539,98 @@ namespace QuoridorApp.ViewModels
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private bool IsPlayer(string playerName)
+        {
+            if (BoardViewModel.isBot(playerName))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private Player GetPlayer(string playerName)
+        {
+            if (playerName == "Me") return CurrentApp.CurrentPlayer;
+            return null;
+        }
+
+
+        private async Task<int> GetRating(string playerName)
+        {
+            //return 2222;
+            if (BoardViewModel.isBot(playerName))
+            {
+                return BotViewModel.GetBotRating(playerName);
+            }
+            if (playerName == "Guest") return -1;
+            //return RatingChange.INITIAL_RATING;
+            Player player;
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            if (playerName == "Me")
+            {
+                player = CurrentApp.CurrentPlayer;
+            }
+            else
+            {
+                player = CurrentApp.CurrentPlayer;
+                //player = await proxy.GetPlayer(playerName);
+            }
+            RatingChange ratingChange = await proxy.GetLastRatingChange(player);
+            if (ratingChange == null) // Player hasn't played yet
+            {
+                return RatingChange.INITIAL_RATING;
+            }
+            return ratingChange.AlteredRating;
+        }
+        // Returns: { {WinnerInitRating, WinnerUpdatedRating}, {LoserInitRating, LoserUpdatedRating}}
+        public async Task<int[][]> FinishGameAsync(string Winner, string Loser)
+        {
+            int WinnerInitRating, WinnerUpdatedRating, LoserInitRating, LoserUpdatedRating;
+            int winnerInit, loserInit, winnerUpdated, loserUpdated;
+            winnerInit = await GetRating(Winner);
+            loserInit = await GetRating(Loser);
+            LoserInitRating = loserInit;
+            WinnerInitRating = winnerInit;
+            //WinnerInitRating = await GetRating(Winner);
+            //LoserInitRating = await GetRating(Loser);
+
+
+            int newWinnerRating = RatingChange.EloRating(WinnerInitRating, LoserInitRating, true);
+            int newLoserRating = RatingChange.EloRating(LoserInitRating, WinnerInitRating, false);
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            if (IsPlayer(Winner))
+            {
+                RatingChange winnerRatingChange = new RatingChange(GetPlayer(Winner), newWinnerRating);
+                await proxy.UpdateRatingChange(winnerRatingChange);
+            }
+            if (IsPlayer(Loser))
+            {
+                RatingChange loserRatingChange = new RatingChange(GetPlayer(Loser), newLoserRating);
+                await proxy.UpdateRatingChange(loserRatingChange);
+            }
+
+
+            winnerUpdated = await GetRating(Winner);
+            loserUpdated = await GetRating(Loser);
+
+
+            WinnerUpdatedRating = winnerUpdated;
+            LoserUpdatedRating = loserUpdated;
+            return new int[][] { new int[] { WinnerInitRating, WinnerUpdatedRating }, new int[] { LoserInitRating, LoserUpdatedRating } }; ;
+        }
 
         /// /////////////////////////////////////////////////////////////////////////////
 
