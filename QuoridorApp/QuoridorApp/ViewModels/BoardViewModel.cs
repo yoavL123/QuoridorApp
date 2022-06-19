@@ -638,12 +638,13 @@ namespace QuoridorApp.ViewModels
             int newWinnerRating = RatingChange.EloRating(WinnerInitRating, LoserInitRating, true);
             int newLoserRating = RatingChange.EloRating(LoserInitRating, WinnerInitRating, false);
             QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
-            if (IsPlayer(Winner))
+            bool me2 = (Winner == "Me") && (Loser == "Me");
+            if (IsPlayer(Winner) && !me2)
             {
                 RatingChange winnerRatingChange = new RatingChange(GetPlayer(Winner), newWinnerRating);
                 await proxy.UpdateRatingChange(winnerRatingChange);
             }
-            if (IsPlayer(Loser))
+            if (IsPlayer(Loser) && !me2)
             {
                 RatingChange loserRatingChange = new RatingChange(GetPlayer(Loser), newLoserRating);
                 await proxy.UpdateRatingChange(loserRatingChange);
