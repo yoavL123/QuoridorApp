@@ -19,16 +19,24 @@ namespace QuoridorApp.ViewModels
         public RatingHistoryViewModel()
         {
             RatingData = new ObservableCollection<RatingChange>();
-            Task.Run(UpdateRatings);
+            Device.BeginInvokeOnMainThread(async () => await UpdateRatings());
+            //Task.Run(UpdateRatings);
             //List<RatingChange> ratingChanges = await proxy.GetRatingChanges(CurrentApp.CurrentPlayer);
         }
 
 
         public ICommand ToProfileCommand => new Command(OnToProfileCommand);
-
+        private async Task<int> InitCurrentRating()
+        {
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            RatingChange lastRatingChange = await proxy.GetLastRatingChange(CurrentApp.CurrentPlayer);
+            if (lastRatingChange != null) return lastRatingChange.AlteredRating;
+            else return 0;
+        }
         public async void OnToProfileCommand()
         {
-            Page p = new Views.Profile();
+            int lastRating = await InitCurrentRating();
+            Page p = new Views.Profile(lastRating);
             await App.Current.MainPage.Navigation.PushAsync(p);
         }
 

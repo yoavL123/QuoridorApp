@@ -37,7 +37,7 @@ namespace QuoridorApp.Views
         public const double PAWN_TILE_SIZE = 60;
         public const double BLOCK_TILE_SMALL = 15;
         public const double BLOCK_TILE_BIG = 60;
-        private const int SLEEP_TIME_MILISECONDS = 200;
+        private const int SLEEP_TIME_MILISECONDS = 350;
 
         public const int SIZE = 9;
 

@@ -585,6 +585,7 @@ namespace QuoridorApp.ViewModels
             {
                 return false;
             }
+            if (playerName == "Guest") return false;
             return true;
         }
 
@@ -625,10 +626,10 @@ namespace QuoridorApp.ViewModels
         // Returns: { {WinnerInitRating, WinnerUpdatedRating}, {LoserInitRating, LoserUpdatedRating}}
         public async Task<int[][]> FinishGameAsync(string Winner, string Loser)
         {
-            int WinnerInitRating, WinnerUpdatedRating, LoserInitRating, LoserUpdatedRating;
-            int winnerInit, loserInit, winnerUpdated, loserUpdated;
-            winnerInit = await GetRating(Winner);
-            loserInit = await GetRating(Loser);
+            int WinnerInitRating = 0, WinnerUpdatedRating = 0, LoserInitRating = 0, LoserUpdatedRating = 0;
+            int winnerInit = 0, loserInit = 0, winnerUpdated = 0, loserUpdated = 0;
+            if(Winner != "Guest") winnerInit = await GetRating(Winner);
+            if(Loser != "Guest") loserInit = await GetRating(Loser);
             LoserInitRating = loserInit;
             WinnerInitRating = winnerInit;
             //WinnerInitRating = await GetRating(Winner);
@@ -639,20 +640,22 @@ namespace QuoridorApp.ViewModels
             int newLoserRating = RatingChange.EloRating(LoserInitRating, WinnerInitRating, false);
             QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
             bool me2 = (Winner == "Me") && (Loser == "Me");
-            if (IsPlayer(Winner) && !me2)
+            bool haveGuest = (Winner == "Guest") || (Loser == "Guest");
+            bool ok = !me2 && !haveGuest;
+            if (IsPlayer(Winner) && ok)
             {
                 RatingChange winnerRatingChange = new RatingChange(GetPlayer(Winner), newWinnerRating);
                 await proxy.UpdateRatingChange(winnerRatingChange);
             }
-            if (IsPlayer(Loser) && !me2)
+            if (IsPlayer(Loser) && ok)
             {
                 RatingChange loserRatingChange = new RatingChange(GetPlayer(Loser), newLoserRating);
                 await proxy.UpdateRatingChange(loserRatingChange);
             }
 
 
-            winnerUpdated = await GetRating(Winner);
-            loserUpdated = await GetRating(Loser);
+            if (Winner != "Guest") winnerUpdated = await GetRating(Winner);
+            if (Loser != "Guest") loserUpdated = await GetRating(Loser);
 
 
             WinnerUpdatedRating = winnerUpdated;

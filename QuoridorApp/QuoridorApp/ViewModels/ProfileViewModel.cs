@@ -6,14 +6,44 @@ using Xamarin.Forms;
 using QuoridorApp.Views;
 using QuoridorApp.Services;
 using QuoridorApp.Models;
+using System.Threading.Tasks;
 
 namespace QuoridorApp.ViewModels
 {
     public class ProfileViewModel : ViewModelBase
     {
 
+        private int currentRating;
+
+        public int CurrentRating
+        {
+            get => currentRating;
+            set
+            {
+                currentRating = value;
+                OnPropertyChanged("CurrentRating");
+            }
+        }
+
+
+        private async Task InitCurrentRating()
+        {
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            RatingChange lastRatingChange = await proxy.GetLastRatingChange(CurrentApp.CurrentPlayer);
+            CurrentRating = 0;
+            if(lastRatingChange != null) CurrentRating = lastRatingChange.AlteredRating;
+        }
+
+        public ProfileViewModel(int currRating)
+        {
+            //InitCurrentRating();
+            CurrentRating = currRating;
+        }
+
         public ProfileViewModel()
-        { }
+        {
+            //InitCurrentRating();
+        }
         public ProfileViewModel(AbsoluteLayout theGraph)
         {
             RatingGraph ratingGraph = new RatingGraph(theGraph);

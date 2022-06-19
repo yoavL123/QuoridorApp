@@ -17,10 +17,11 @@ namespace QuoridorApp.Views
     {
 
         
-        public Profile()
+        public Profile(int currRating)
         {
             InitializeComponent();
-            ProfileViewModel vm = new ProfileViewModel(theGraph);
+            //ProfileViewModel vm = new ProfileViewModel(theGraph);
+            ProfileViewModel vm = new ProfileViewModel(currRating);
             BindingContext = vm;
             
         }

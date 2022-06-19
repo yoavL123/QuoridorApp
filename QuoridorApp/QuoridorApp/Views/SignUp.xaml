@@ -38,7 +38,7 @@
                 </StackLayout>
             </Frame>
             <Button Command="{Binding SubmitSignUpCommand}" Text="Sign Up" Style="{DynamicResource buttonStyle}" />
-            <Button Text="Back To Main Page" Command="{Binding ToStartPageCommand}" />
+            <Button Text="Back To Main Page" Command="{Binding ToStartPageCommand}" Style="{DynamicResource buttonStyle}" />
         </StackLayout>
         
         

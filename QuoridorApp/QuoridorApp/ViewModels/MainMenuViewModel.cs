@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using QuoridorApp.Services;
 using QuoridorApp.Models;
 using QuoridorApp.Views;
+using System.Threading.Tasks;
 
 namespace QuoridorApp.ViewModels
 {
@@ -48,11 +49,22 @@ namespace QuoridorApp.ViewModels
         }
         #endregion
 
+
+        private async Task<int> InitCurrentRating()
+        {
+            QuoridorAPIProxy proxy = QuoridorAPIProxy.CreateProxy();
+            RatingChange lastRatingChange = await proxy.GetLastRatingChange(CurrentApp.CurrentPlayer);
+
+            if (lastRatingChange != null) return lastRatingChange.AlteredRating;
+            else return 0;
+        }
+
         #region Go To Profile
         public ICommand ToProfileCommand => new Command(OnToProfileCommand);
         public async void OnToProfileCommand()
         {
-            Page p = new Views.Profile();
+            int lastRating = await InitCurrentRating();
+            Page p = new Views.Profile(lastRating);
             await App.Current.MainPage.Navigation.PushAsync(p);
         }
         #endregion

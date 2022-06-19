@@ -15,7 +15,7 @@ namespace QuoridorApp.Models
 
 
         public static int INITIAL_RATING = 1500;
-        private static int K = 50;
+        private static int K = 70;
         public RatingChange()
         {
 
